@@ -1,5 +1,16 @@
-﻿var latestVersion = "v0.0.0.5-dev";
+﻿var latestVersion = "v0.0.0.6-dev";
 var versionHistory = [
+    {
+        version: "v0.0.0.6-dev",
+        date: "2018-10-12",
+        changes: [
+            "Moved toolbar buttons to the top right corner",
+            "Moved auto-save and last save timestamp to dropdown menu (looks slightly off but uses less of the screen so is fine)",
+            "Changed last save timestamp's format",
+            "Changed big numbers format to show three digits and a decimal at most instead of 5 digits",
+            "Fixed bug game would display big numbers with rounding instead of truncating (e.g. 3,299 should show as 3.2k instead of 3.3k)"
+        ]
+    },
     {
         version: "v0.0.0.5-dev",
         date: "2018-10-11",

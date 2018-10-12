@@ -72,7 +72,8 @@ button {
 }
 
 #lastSaved {
-    font-size: small;
+    font-size: x-small;
     color: gray;
     font-style: italic;
+    white-space: normal;
 }

@@ -1,5 +1,5 @@
-﻿var Game = {};
-Game.util = {
+﻿var game = {};
+game.util = {
     units: ["", "k", "M", "B", "T", "q", "Q", "s", "S", "O", "N", "d", "U", "D"],
     groupDigits: function(number) {
         var str = number.toFixed(0);
@@ -8,7 +8,7 @@ Game.util = {
     prettifyNumber: function (number) {
         var exp = number.toExponential(3);
         var power = Number(exp.split('e')[1]);
-        var ind = power > 2 ? Math.floor((power - 2) / 3) : 0;
+        var ind = Math.floor(power / 3);
 
         if (ind >= this.units.length) {
             return exp;
@@ -19,7 +19,10 @@ Game.util = {
             num = num / 1000;
         }
 
-        return this.groupDigits(num) + this.units[ind];
+        var sNum = num.toString().split(".");
+        var integer = sNum[0];
+        var decimal = ("." + ((sNum[1] || "")[0] || "0")).replace(".0", "");
+        return integer + decimal + this.units[ind];
     },
     useLocalStorage: function() {
         return /^file:\/\//i.test(location.href);
@@ -111,73 +114,102 @@ Game.util = {
         var expires = "expires=" + d.toUTCString();
         var cookie = key + "=; " + expires + "; path=/";
         document.cookie = cookie;
+    },
+    prettifyDate: function(ticks) {
+        var d = new Date(ticks);
+        
+        var hourNumber = d.getHours();
+        var timeOfDay = "AM";
+        if (hourNumber == 0) {
+            hourNumber = 12;
+        }
+        else if (hourNumber > 11) {
+            timeOfDay = "PM";
+            if (hourNumber > 12) {
+                hourNumber = hourNumber - 12;
+            }
+        }
+
+        var year = d.getFullYear();
+        var month = ("0" + (d.getMonth() + 1)).substr(-2);
+        var day = ("0" + d.getDate()).substr(-2);
+        var hour = ("0" + hourNumber).substr(-2);
+        var minute = ("0" + d.getMinutes()).substr(-2);
+        var second = ("0" + d.getSeconds()).substr(-2);
+        //var milisecond = ("00" + d.getMilliseconds()).substr(-3);
+
+        return year + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + second + " " + timeOfDay;
     }
 };
-Game.data = null;
-Game.start = function () {
-    Game.data = {};
-    Game.data.startTime = new Date().getTime();
-    Game.data.lastSaveTime = new Date().getTime();
-    Game.data.autosave = true;
-    Game.util.saveData("data", Game.data);
-    $("#lastSaved").text("Game last saved on " + new Date(Game.data.lastSaveTime).toString());
+game.data = null;
+game.start = function () {
+    game.data = {};
+    game.data.startTime = new Date().getTime();
+    game.data.lastSaveTime = new Date().getTime();
+    game.data.autosave = true;
+    game.util.saveData("data", game.data);
+    $("#lastSaved").html("last saved: <br/>" + game.util.prettifyDate(game.data.lastSaveTime));
 
-    $("#chkAutosave").prop("checked", Game.data.autosave);
+    $("#chkAutosave").prop("checked", game.data.autosave);
     $("[data-page]").hide();
     $("[data-page='game']").show();
 };
-Game.load = function () {
-    Game.data = Game.util.loadData("data");
-    if (Game.data) {
+game.load = function () {
+    game.data = game.util.loadData("data");
+    if (game.data) {
         // TODO - prepare data
 
-        $("#chkAutosave").prop("checked", Game.data.autosave);
-        $("#lastSaved").text("Game last saved on " + new Date(Game.data.lastSaveTime).toString());
+        $("#chkAutosave").prop("checked", game.data.autosave);
+        $("#lastSaved").html("last saved: <br/>" + game.util.prettifyDate(game.data.lastSaveTime));
 
         $("[data-page]").hide();
         $("[data-page='game']").show();
     }
+    else {
+        $("[data-page]").hide();
+        $("[data-page='intro']").show();
+    }
 };
-Game.save = function () {
-    if (!Game.data) {
+game.save = function () {
+    if (!game.data) {
         return;
     }
 
-    Game.data.lastSaveTime = new Date().getTime();
-    Game.util.saveData("data", Game.data);
-    $("#lastSaved").text("Game last saved on " + new Date(Game.data.lastSaveTime).toString());
+    game.data.lastSaveTime = new Date().getTime();
+    game.util.saveData("data", game.data);
+    $("#lastSaved").html("last saved: <br/>" + game.util.prettifyDate(game.data.lastSaveTime));
 };
-Game.doOver = function () {
-    Game.util.clearData("data");
-    Game.data = null;
+game.doOver = function () {
+    game.util.clearData("data");
+    game.data = null;
 
     $("[data-page]").hide();
     $("[data-page='intro']").show();
 };
 
 $(function () {
+    game.load();
+
     setInterval(function () {
-        if (Game.data && Game.data.autosave) {
-            Game.save();
+        if (game.data && game.data.autosave) {
+            game.save();
         }
     }, 1000 * 60 * 5);
 
     $("#chkAutosave").click(function () {
-        if (!Game.data) {
+        if (!game.data) {
             return;
         }
-        Game.data.autosave = $(this).is(":checked");
+        game.data.autosave = $(this).is(":checked");
     });
 
     $("#btnSave").click(function () {
-        Game.save();
+        game.save();
     });
 
-    Game.load();
-
     $(window).on("beforeunload", function () {
-        if (Game.data && Game.data.autosave) {
-            Game.save();
+        if (game.data && game.data.autosave) {
+            game.save();
         }
     });
 });

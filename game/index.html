@@ -66,12 +66,41 @@
 
     <div class="container-fluid">
 
-        <header>
+        <div data-page="game" style="display: none; float: right; margin-top: 13px;">
+            <button type="button" class="btn btn-info" data-target="#versionInfoModal" data-toggle="modal">
+                Version history
+            </button>
+            
+            <button type="button" class="btn btn-danger" data-target="#startOverModal" data-toggle="modal">
+                Start over
+            </button>
+            
+            <div class="btn-group">
+                <button id="btnSave" type="button" class="btn btn-success">
+                    Save game
+                </button>
+                <div class="btn-group">
+                    <button class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right" style="max-width: 200px;">
+                        <label class="dropdown-item">
+                            <input type="checkbox" id="chkAutosave" checked="checked" />
+                            Enable autosave
+                        </label>                            
+                        <a class="dropdown-item disabled">
+                            <label id="lastSaved"></label>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div>
             <span class="page-title">Progress Tickle</span>
             <span id="latestVersion" class="version"></span>
-        </header>
-        
-        <div data-page="intro">
+        </div>
+
+        <div data-page="intro" style="display: none;">
             <p>
                 Welcome to this proof of concept in-development version of Progress Tickle, an idle game centered around tickling. :P
             </p>
@@ -84,32 +113,13 @@
                 Version history
             </button>
 
-            <button type="button" class="btn btn-primary" onclick="Game.start();">
-                Start - sorry, not much of anything but you can still check it ^^;
+            <button type="button" class="btn btn-primary" onclick="game.start();">
+                Start
             </button>
         </div>
 
         <div data-page="game" style="display: none;">
-            <button type="button" class="btn btn-info" data-target="#versionInfoModal" data-toggle="modal">
-                Version history
-            </button>
-
-            <button type="button" class="btn btn-danger" data-target="#startOverModal" data-toggle="modal">
-                Start over
-            </button>
-
-            <button id="btnSave" type="button" class="btn btn-success">
-                Save game
-            </button>
-
-            <label class="checkbox checkbox-inline">
-                <input type="checkbox" id="chkAutosave" checked="checked" />
-                Enable autosave
-            </label>
-
-            <label id="lastSaved">
-
-            </label>
+            <hr>
         </div>
 
         <div class="modal fade" id="startOverModal" tabindex="-1" role="dialog" aria-labelledby="startOverModalLabel" aria-hidden="true">
@@ -126,7 +136,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                        <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="Game.doOver();">Confirm</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="game.doOver();">Confirm</button>
                     </div>
                 </div>
             </div>
@@ -141,7 +151,7 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <div id="versionHistoryList" class="modal-body" style="font-size:small;">
+                    <div id="versionHistoryList" class="modal-body" style="font-size:small; max-height: 300px; overflow: auto;">
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -156,7 +166,7 @@
     <script src="js/popper.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/versionHistory.js"></script>
-    <script src="js/Game.js"></script>
+    <script src="js/game.js"></script>
     <script src="js/index.js"></script>
 </body>
 </html>
