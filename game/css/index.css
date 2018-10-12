@@ -1,0 +1,78 @@
+﻿/*body {
+    background: black;
+}
+body * {
+    font-family: monospace;
+}
+button {
+    background: #eee;
+    border-color: #eee;
+    outline: none;
+}
+
+.clearfix {
+    clear: both;
+}
+
+#play_area {
+    background: #eee;
+    position: fixed;
+    top: 5px;
+    bottom: 5px;
+    left: 5px;
+    right: 5px;
+}
+#play_area_outer,
+#play_area_inner {
+    position: relative;
+}
+#funds {
+    float: left;
+    background: black;
+    color: white;
+    font-weight: bold;
+    padding: 5px;
+    text-transform: uppercase;
+}
+#toolbar {
+    float: right;
+    background: black;
+    color: white;
+    font-weight: bold;
+    padding: 5px;
+}
+#helpers,
+#slots {
+    float: right;
+    max-width: 300px;
+    max-height: 300px;
+    margin: 2px;
+    border: 2px solid black;
+}
+#helpers_header,
+#slots_header {
+    background: black;
+    color: white;
+    font-weight: bold;
+    text-transform: uppercase;
+    padding: 3px;
+}
+#helpers_body,
+#slots_body {
+    padding: 5px;
+}*/
+
+.page-title {
+    font-weight: bold;
+    font-size: xx-large;
+}
+.version {
+    font-style: italic;
+    font-size: small;
+}
+
+#lastSaved {
+    font-size: small;
+    color: gray;
+    font-style: italic;
+}
