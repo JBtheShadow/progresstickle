@@ -1,5 +1,28 @@
-﻿var latestVersion = "v0.0.0.6-dev";
+﻿var latestVersion = "v0.1.0.0-dev";
 var versionHistory = [
+    {
+        version: "v0.1.0.0-dev",
+        date: "2018-10-12",
+        changes: [
+            "Brought David back! (the demonling used for testing)",
+            "Somewhat playable version! (Finally! :D)",
+            "Initial version of endurance + stamina bars working",
+            "Both endurance and stamina drain from tickling, but laffs are only earned when endurance is down",
+            "If stamina hits zero you can't earn anymore laffs until it's recovered a little bit",
+            "When idle stamina recovers first, then endurance",
+            "Need to implement another state for 'fainted' where no laffs are earned whatsoever until both bars are back to full",
+            "Need a means to boost how many laffs you gain per click, or the amount of helpers you can have, or how many of them are earning extra laffs for you by tickling their peers, or all that other good stuff"
+        ]
+    },
+    {
+        version: "v0.0.0.7-dev",
+        date: "2018-10-12",
+        changes: [
+            "Added code to detect if save is from different version, show version history if it is",
+            "Added a crude validation if some of the data is missing (data saved on prior versions) to give it some default values",
+            "Added placeholder buttons for subjects and rooms"
+        ]
+    },
     {
         version: "v0.0.0.6-dev",
         date: "2018-10-12",
