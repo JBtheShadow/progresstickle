@@ -182,6 +182,17 @@
                 $text.text(pretty);
             });
 
+            $(".btn-upgrade[data-cost]").each(function(i, el) {
+                var $btn = $(el);
+                var cost = Number($btn.attr("data-cost"));
+                if (cost > game.data.laffs.current) {
+                    $btn.addClass("disabled");
+                }
+                else {
+                    $btn.removeClass("disabled");
+                }
+            });
+
             $(".card[data-subject]").each(function() {
                 var $card = $(this);
                 var id = Number($card.attr("data-subject"));
@@ -255,6 +266,124 @@
         $(window).on("beforeunload", function() {
             manager.autosave();
         });
+    };
+
+    manager.viewSubject = function(id) {
+        id = Number(id);
+
+        var data = game.data;
+        if (!data) {
+            return;
+        }
+        var subject = $(data.subjects || []).filter(function(i, el) {
+            return el.id == id;
+        }).get(0);
+        if (!subject) {
+            return;
+        }
+
+        var $modal = $("#subjectInfoModal");
+
+        var profile = game.db.getSubjectProfile(subject);
+        $modal.find("[data-stat='profile']").attr("src", profile);
+
+        $modal.find("[data-stat='id']").text(subject.id);
+        $modal.find("[data-stat='name']").text(subject.name);
+        $modal.find("[data-stat='species']").text(subject.species);
+
+        var buyUpgrade = function(stat) {
+            var value = 0;
+            if (stat.indexOf(".") > -1) {
+                var aux = stat.split(".");
+                var stat1 = aux[0];
+                var stat2 = aux[1];
+                value = subject[stat1][stat2];
+            }
+            else {
+                value = subject[stat];
+            }
+
+            var upgrade = game.db.getStatUpgrade(stat, value);
+            game.data.laffs.current = Math.max(0, game.data.laffs.current - upgrade.cost);
+            if (stat.indexOf(".") > -1) {
+                var aux = stat.split(".");
+                var stat1 = aux[0];
+                var stat2 = aux[1];
+                subject[stat1][stat2] = upgrade.nextValue;
+            }
+            else {
+                subject[stat] = upgrade.nextValue;
+            }
+        };
+
+        var updateStats = function() {
+            $modal.find("[data-stat='endurance.max']").text(subject.endurance.max);
+            $modal.find("[data-stat='endurance.regen']").text(subject.endurance.regen);
+            $modal.find("[data-stat='stamina.max']").text(subject.stamina.max);
+            $modal.find("[data-stat='stamina.regen']").text(subject.stamina.regen);
+            $modal.find("[data-stat='laffs']").text(subject.laffs);
+            $modal.find("[data-stat='power']").text(subject.power);
+        
+            $modal.find("[data-target-stat]").each(function(i, el) {
+                var $btn = $(el);
+                var stat = $btn.attr("data-target-stat");
+
+                $btn.off("click").click(function() {
+                    if ($(this).is(".disabled")) {
+                        return;
+                    }
+                    buyUpgrade(stat);
+                    updateStats();
+                });
+
+                var value = 0;
+                if (stat.indexOf(".") > -1) {
+                    var aux = stat.split(".");
+                    var stat1 = aux[0];
+                    var stat2 = aux[1];
+                    value = subject[stat1][stat2];
+                }
+                else {
+                    value = subject[stat];
+                }
+
+                var upgrade = game.db.getStatUpgrade(stat, value);
+
+                $btn.attr("data-cost", upgrade.cost);
+
+                if (upgrade.cost > game.data.laffs.current) {
+                    $btn.addClass("disabled");
+                }
+                else {
+                    $btn.removeClass("disabled");
+                }
+
+                var diffText = game.util.prettifyNumber(upgrade.diff);
+                if (stat == "endurance.regen" || stat == "stamina.regen" || stat == "power") {
+                    if (upgrade.diff < 10) {
+                        diffText = upgrade.diff.toString();
+                    }
+                    else if (upgrade.diff < 100) {
+                        var aux = upgrade.diff.toString().split(".");
+                        diffText = aux[0] + (aux[1] ? "." + aux[1][0] : "");
+                    }
+                    else if (upgrade.diff < 1000) {
+                        var aux = upgrade.diff.toString().split(".");
+                        diffText = aux[0];
+                    }
+                }
+
+                var costText = game.util.prettifyNumber(upgrade.cost);
+
+                $btn.text("+" + diffText + "/" + costText + " laffs");
+            });
+        };
+        updateStats();
+
+        var nature = game.db.getNature(subject);
+        $modal.find("[data-stat='nature']").text(nature);
+
+        $modal.modal("show");
     };
 
     $(function() {

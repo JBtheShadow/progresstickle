@@ -1,6 +1,13 @@
 ﻿(function() {
-    var latestVersion = game.latestVersion = "v0.1.0.1-dev"
+    var latestVersion = game.latestVersion = "v0.1.0.2-dev"
     var versionHistory = game.versionHistory = [
+        {
+            version: "v0.1.0.2-dev",
+            date: "2018-10-14",
+            changes: [
+                "Basic stat screen! Now you can check David's stats and even spend laffs to improve them!"
+            ]
+        },
         {
             version: "v0.1.0.1-dev",
             date: "2018-10-13",
@@ -33,7 +40,7 @@
                 "Added a crude validation if some of the data is missing (data saved on prior versions) to give it some default values",
                 "Added placeholder buttons for subjects and rooms"
             ]
-        },
+        }/*,
         {
             version: "v0.0.0.6-dev",
             date: "2018-10-12",
@@ -89,7 +96,7 @@
                 "Initial idea",
                 "Code for writing big numbers as slightly more human-readable"
             ]
-        }
+        }*/
     ];
 
     $("#latestVersion").text(latestVersion);

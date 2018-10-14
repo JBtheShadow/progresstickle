@@ -166,4 +166,47 @@
 
         return images[index] || images[0];
     };
+
+    db.getSubjectProfile = function(subject) {
+        if (!subject) {
+            return;
+        }
+
+        var index = 1;
+        var state = "idle";
+        var images = imageData.images[subject.image][state];
+        if (!images || !images.length) {
+            return;
+        }
+
+        return images[index] || images[0];
+    };
+
+    db.getNature = function(subject) {
+        // TODO
+        return "Doesn't have many preferences, enjoys most everything.";
+    };
+
+    db.getStatUpgrade = function(stat, value) {
+        var multiplier = 100;
+        var decimals = value < 1 ? 2 : 0;
+        if (stat == "endurance.regen") {
+            multiplier = 50000;
+        }
+        if (stat == "stamina.regen") {
+            multiplier = 100000;
+        }
+        if (stat == "power") {
+            multiplier = 25000;
+        }
+        if (stat == "laffs") {
+            multiplier = 200;
+        }
+
+        var nextValue = Number((value * 1.7).toFixed(decimals));
+        var diff = Number((nextValue - value).toFixed(decimals));
+        var cost = Number((diff * 2.1 * multiplier).toFixed(0));
+
+        return { cost: cost, nextValue: nextValue, diff: diff };
+    };
 })();
