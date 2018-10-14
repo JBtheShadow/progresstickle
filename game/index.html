@@ -59,7 +59,7 @@
                 Version history
             </button>
 
-            <button type="button" class="btn btn-primary" onclick="game.start();">
+            <button type="button" class="btn btn-primary" onclick="game.gameManager.start();">
                 Start
             </button>
         </div>
@@ -140,7 +140,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                        <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="game.doOver();">Confirm</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="game.gameManager.doOver();">Confirm</button>
                     </div>
                 </div>
             </div>
@@ -270,7 +270,11 @@
     <script src="js/jquery-3.3.1.slim.min.js"></script>
     <script src="js/popper.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
-    <script src="js/versionHistory.js"></script>
     <script src="js/game.js"></script>
+    <script src="js/util.js"></script>
+    <script src="js/versionHistory.js"></script>
+    <script src="js/database.js"></script>
+    <script src="js/datamanager.js"></script>
+    <script src="js/gamemanager.js"></script>
 </body>
 </html>
