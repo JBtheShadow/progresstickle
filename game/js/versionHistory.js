@@ -1,6 +1,14 @@
 ﻿(function() {
     var versionHistory = game.versionHistory = [
         {
+            version: "v0.1.0.4-dev",
+            date: "2025-02-03",
+            changes: [
+                "Changed image logic to rely on css classes instead of editing the source directly",
+                "This could be useful later for animations via css"
+            ]
+        },
+        {
             version: "v0.1.0.3-dev",
             date: "2025-02-03",
             changes: [

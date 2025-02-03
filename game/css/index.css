@@ -26,3 +26,62 @@ table th {
 .hidden {
     display: none;
 }
+
+.subject-img {
+    width: 198px;
+    height: 193px;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.subject-img.demonling.idle.full {
+    background-image: url('../img/lil\ demon\ -\ idle.png');
+}
+.subject-img.demonling.idle.high {
+    background-image: url('../img/lil\ demon\ -\ smile.png');
+}
+.subject-img.demonling.idle.half {
+    background-image: url('../img/lil\ demon\ -\ smile.png');
+}
+.subject-img.demonling.idle.low {
+    background-image: url('../img/lil\ demon\ -\ open\ mouth.png');
+}
+.subject-img.demonling.idle.weak {
+    background-image: url('../img/lil\ demon\ -\ laugh\ 2.png');
+}
+
+.subject-img.demonling.resisting.full {
+    background-image: url('../img/lil\ demon\ -\ wink.png');
+}
+.subject-img.demonling.resisting.high {
+    background-image: url('../img/lil\ demon\ -\ wink.png');
+}
+.subject-img.demonling.resisting.half {
+    background-image: url('../img/lil\ demon\ -\ grin.png');
+}
+.subject-img.demonling.resisting.low {
+    background-image: url('../img/lil\ demon\ -\ grin.png');
+}
+.subject-img.demonling.resisting.weak {
+    background-image: url('../img/lil\ demon\ -\ laugh.png');
+}
+
+.subject-img.demonling.laughing.full {
+    background-image: url('../img/lil\ demon\ -\ wink.png');
+}
+.subject-img.demonling.laughing.high {
+    background-image: url('../img/lil\ demon\ -\ grin.png');
+}
+.subject-img.demonling.laughing.half {
+    background-image: url('../img/lil\ demon\ -\ grin.png');
+}
+.subject-img.demonling.laughing.low {
+    background-image: url('../img/lil\ demon\ -\ laugh.png');
+}
+.subject-img.demonling.laughing.weak {
+    background-image: url('../img/lil\ demon\ -\ laugh.png');
+}
+
+.subject-img.demonling.fainted {
+    background-image: url('../img/lil\ demon\ -\ fainted.png');
+}

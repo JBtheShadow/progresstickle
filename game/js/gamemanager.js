@@ -69,10 +69,7 @@
 
     manager.updateImage = function($card, subject) {
         var $img = $card.find("[data-stat='state']");
-        var src = game.db.getSubjectImage(subject);
-        if ($img && $img.attr("src") != src) {
-            $img.attr("src", src);
-        } 
+        $img.removeClass().addClass(game.db.getSubjectImage(subject));
     }
 
     manager.setupSubjectCard = function($card, subject) {
@@ -284,8 +281,7 @@
 
         var $modal = $("#subjectInfoModal");
 
-        var profile = game.db.getSubjectProfile(subject);
-        $modal.find("[data-stat='profile']").attr("src", profile);
+        $modal.find("[data-stat='profile']").removeClass().addClass(game.db.getSubjectProfile(subject));
 
         $modal.find("[data-stat='id']").text(subject.id);
         $modal.find("[data-stat='name']").text(subject.name);

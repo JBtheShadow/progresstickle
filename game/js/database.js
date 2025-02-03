@@ -2,14 +2,7 @@
     var db = game.db = {};
     var imageData = db.imageData = {};
     imageData.thresholds = [1, 0.9, 0.6, 0.3, 0];
-    imageData.images = {
-        demonling: {
-            idle: ["img/lil demon - idle.png", "img/lil demon - smile.png", "img/lil demon - smile.png", "img/lil demon - open mouth.png", "img/lil demon - laugh 2.png"],
-            tickled: ["img/lil demon - wink.png", "img/lil demon - wink.png", "img/lil demon - grin.png", "img/lil demon - grin.png", "img/lil demon - laugh.png"],
-            tickled2: ["img/lil demon - wink.png", "img/lil demon - grin.png", "img/lil demon - grin.png", "img/lil demon - laugh.png", "img/lil demon - laugh.png"],
-            fainted: ["img/lil demon - fainted.png"]
-        }
-    };
+    imageData.states = ["full", "high", "half", "low", "weak", "fainted"];
 
     db.initializeGameData = function() {
         var data = {};
@@ -138,33 +131,33 @@
         }
 
         var index = 0;
-        for (var i = 0; i < imageData.thresholds.length; i++) {
-            var threshold = imageData.thresholds[i];
-            if (percStamina >= threshold) {
-                index = i;
-                break;
+        if (percStamina <= 0) {
+            index = 5;
+        }
+        else {
+            for (var i = 0; i < imageData.thresholds.length; i++) {
+                var threshold = imageData.thresholds[i];
+                if (percStamina >= threshold) {
+                    index = i;
+                    break;
+                }
             }
         }
 
-        var state = subject.state;
+        var imgState = subject.state == "tickled" ? "resisting" : subject.state;
         if (subject.autostate == "tickled") {
-            if (state == "tickled" || state == "idle" && subject.tickleDelay) {
-                state = "tickled2";
+            if (subject.state == "tickled" || subject.state == "idle" && subject.tickleDelay) {
+                imgState = "laughing";
             }
-            else if (state == "idle") {
-                state = "tickled";
+            else if (subject.state == "idle") {
+                imgState = "resisting";
             }
         }
-        else if (state == "idle" && subject.tickleDelay) {
-            state = "tickled";
+        else if (subject.state == "idle" && subject.tickleDelay) {
+            imgState = "resisting";
         }
 
-        var images = imageData.images[subject.image][state];
-        if (!images || !images.length) {
-            return;
-        }
-
-        return images[index] || images[0];
+        return `subject-img ${subject.image} ${imgState} ${imageData.states[index]}`;
     };
 
     db.getSubjectProfile = function(subject) {
@@ -172,14 +165,7 @@
             return;
         }
 
-        var index = 1;
-        var state = "idle";
-        var images = imageData.images[subject.image][state];
-        if (!images || !images.length) {
-            return;
-        }
-
-        return images[index] || images[0];
+        return `subject-img ${subject.image} idle high`;
     };
 
     db.getNature = function(subject) {
