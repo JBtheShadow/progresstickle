@@ -1,6 +1,12 @@
 ﻿(function() {
-    var latestVersion = game.latestVersion = "v0.1.0.2-dev"
     var versionHistory = game.versionHistory = [
+        {
+            version: "v0.1.0.3-dev",
+            date: "2025-02-03",
+            changes: [
+                "Moved external libraries to a separate /libs folder"
+            ]
+        },
         {
             version: "v0.1.0.2-dev",
             date: "2018-10-14",
@@ -40,7 +46,7 @@
                 "Added a crude validation if some of the data is missing (data saved on prior versions) to give it some default values",
                 "Added placeholder buttons for subjects and rooms"
             ]
-        }/*,
+        },
         {
             version: "v0.0.0.6-dev",
             date: "2018-10-12",
@@ -96,8 +102,9 @@
                 "Initial idea",
                 "Code for writing big numbers as slightly more human-readable"
             ]
-        }*/
+        }
     ];
+    var latestVersion = game.latestVersion = versionHistory[0].version;
 
     $("#latestVersion").text(latestVersion);
 
