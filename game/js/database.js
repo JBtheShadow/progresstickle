@@ -9,7 +9,7 @@
         data.startTime = new Date().getTime();
         data.lastSaveTime = new Date().getTime();
         data.autosave = true;
-        data.version = latestVersion;
+        data.version = VersionHistory.latest;
         data.subjects = [];
         data.subjects.push({
             id: 0,

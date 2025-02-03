@@ -21,7 +21,7 @@
         if (game.data) {
             game.data = game.db.normalizeGameData(game.data);
 
-            if (game.data.version != game.latestVersion) {
+            if (game.data.version != VersionHistory.latest) {
                 $("#versionInfoModal").modal("show");
             }
 
@@ -42,7 +42,7 @@
     manager.save = function() {
         if (game.data) {
             game.data.lastSaveTime = new Date().getTime();
-            game.data.version = game.latestVersion;
+            game.data.version = VersionHistory.latest;
             game.dataManager.save("data", game.data);
             $("#lastSaved").html("last saved: <br/>" + game.util.prettifyDate(game.data.lastSaveTime));
         }
