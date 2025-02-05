@@ -1,5 +1,16 @@
 ﻿class VersionHistory {
     static history = [
+        new Version("v0.1.0.8-dev", "2025-02-05", [
+            "Fixed an exploit from restarting a run multiple times without refreshing the page"
+        ]),
+        new Version("v0.1.0.7-dev", "2025-02-05", [
+            "Rebalanced laffs awarded from dragging your mouse over subjects to half of what it was granting before",
+            "TODO: Might have to actually look into some kind of delta time calculation here instead"
+        ]),
+        new Version("v0.1.0.6-dev", "2025-02-05", [
+            "Rewrote util into a class",
+            "Replaced calls to substr with slice"
+        ]),
         new Version("v0.1.0.5-dev", "2025-02-03", [
             "Rewrote version history to use class notation"
         ]),
