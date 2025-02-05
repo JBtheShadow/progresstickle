@@ -2,20 +2,20 @@
     var db = game.db = {};
     var imageData = db.imageData = {};
     imageData.thresholds = [1, 0.9, 0.6, 0.3, 0];
-    imageData.states = ["full", "high", "half", "low", "weak", "fainted"];
+    imageData.states = [
+        StaminaLevels.FULL,
+        StaminaLevels.HIGH,
+        StaminaLevels.HALF,
+        StaminaLevels.LOW,
+        StaminaLevels.WEAK,
+        StaminaLevels.FAINTED
+    ];
 
-    db.initializeGameData = function() {
-        var data = {};
-        data.startTime = new Date().getTime();
-        data.lastSaveTime = new Date().getTime();
-        data.autosave = true;
-        data.version = VersionHistory.latest;
-        data.subjects = [];
-        data.subjects.push({
-            id: 0,
-            name: "David",
-            species: "Demonling",
-            image: "demonling",
+    db.defaultDemonling = function(id, name, roomId) {
+        return {
+            id: id,
+            name: name,
+            species: Species.Demonling,
             endurance: {
                 current: 5,
                 max: 5,
@@ -28,20 +28,39 @@
             },
             laffs: 1,
             power: 0.01,
-            job: "lee",
-            room: 0
-        });
-        data.rooms = [];
-        data.rooms.push({
-            id: 0,
-            name: "Room #0"
-        });
-        data.laffs = {
+            job: Jobs.LEE,
+            nature: Natures.NEUTRAL,
+            room: roomId
+        };
+    };
+
+    db.defaultRoom = function(id) {
+        return {
+            id: id,
+            name: `Room #${id}`
+        };
+    };
+
+    db.startingLaffs = function() {
+        return {
             current: 0,
             power: 0.1,
             modifier: 0,
             factor: 1.0,
         };
+    }
+
+    db.initializeGameData = function() {
+        var data = {};
+        data.startTime = new Date().getTime();
+        data.lastSaveTime = new Date().getTime();
+        data.autosave = true;
+        data.version = VersionHistory.latest;
+        data.subjects = [];
+        data.subjects.push(db.defaultDemonling(1, "David", 1));
+        data.rooms = [];
+        data.rooms.push(db.defaultRoom(1));
+        data.laffs = db.startingLaffs();
 
         return data;
     };
@@ -64,30 +83,17 @@
             data.subjects = [];
         }
         if (!data.subjects || !data.subjects.length) {
-            data.subjects.push({
-                id: 0,
-                name: "David",
-                species: "Demonling",
-                image: "demonling",
-                endurance: {
-                    current: 5,
-                    max: 5,
-                    regen: 0.01
-                },
-                stamina: {
-                    current: 20,
-                    max: 20,
-                    regen: 0.01
-                },
-                laffs: 1,
-                power: 0.01,
-                job: "lee",
-                room: 0
-            });
+            data.subjects.push(db.defaultDemonling(1, "David", 1));
         }
         $(data.subjects).each(function(i, el) {
-            if (typeof el.image === "undefined") {
-                el.image = "demonling";
+            if (typeof el.species === "string") {
+                el.species = el.species.toLowerCase();
+            }
+            if (typeof el.nature === "undefined") {
+                el.nature = Natures.NEUTRAL;
+            }
+            if (typeof el.image !== "undefined") {
+                delete el.image;
             }
             if (typeof el.power === "undefined") {
                 el.power = 0.01;
@@ -98,22 +104,31 @@
             data.rooms = [];
         }
         if (!data.rooms || !data.rooms.length) {
-            data.rooms.push({
-                id: 0,
-                name: "Room #0"
-            });
+            data.rooms.push(db.defaultRoom(1));
         }
         if (typeof data.laffs === "undefined") {
-            data.laffs = {
-                current: 0,
-                power: 0.1,
-                modifier: 0,
-                factor: 1.0,
-            };
+            data.laffs = db.startingLaffs();
         }
 
         return data;
     };
+
+    db.getSpeciesImage = function(species) {
+        switch (species) {
+            case Species.DEMONLING:
+                return SpeciesImages.DEMONLING;
+            case Species.FUFFLEBUG:
+                return SpeciesImages.FUFFLEBUG;
+            case Species.BUNDELION:
+                return SpeciesImages.BUNDELION;
+            case Species.NVOII:
+                return SpeciesImages.NVOII;
+            case Species.STONAUTO:
+                return SpeciesImages.STONAUTO;
+            default:
+                return "";
+        }
+    }
 
     db.getSubjectImage = function(subject) {
         if (!subject && !subject.state) {
@@ -144,20 +159,27 @@
             }
         }
 
-        var imgState = subject.state == "tickled" ? "resisting" : subject.state;
-        if (subject.autostate == "tickled") {
-            if (subject.state == "tickled" || subject.state == "idle" && subject.tickleDelay) {
-                imgState = "laughing";
+        var reaction =
+            subject.state == TickledStates.TICKLED ? Reactions.RESISTING :
+            subject.state == TickledStates.IDLE ? Reactions.IDLE :
+            subject.state == TickledStates.FAINTED ? Reactions.FAINTED :
+            Reactions.LAUGHING;
+        
+        if (subject.autostate == TickledStates.TICKLED) {
+            if (subject.state == TickledStates.TICKLED || subject.state == TickledStates.IDLE && subject.tickleDelay) {
+                reaction = Reactions.LAUGHING;
             }
-            else if (subject.state == "idle") {
-                imgState = "resisting";
+            else if (subject.state == TickledStates.IDLE) {
+                reaction = Reactions.RESISTING;
             }
         }
-        else if (subject.state == "idle" && subject.tickleDelay) {
-            imgState = "resisting";
+        else if (subject.state == TickledStates.IDLE && subject.tickleDelay) {
+            reaction = Reactions.RESISTING;
         }
 
-        return `subject-img ${subject.image} ${imgState} ${imageData.states[index]}`;
+        var subjectImage = db.getSpeciesImage(subject.species);
+
+        return `subject-img ${subjectImage} ${reaction} ${imageData.states[index]}`;
     };
 
     db.getSubjectProfile = function(subject) {
@@ -165,27 +187,33 @@
             return;
         }
 
-        return `subject-img ${subject.image} idle high`;
+        var subjectImage = db.getSpeciesImage(subject.species);
+
+        return `subject-img ${subjectImage} idle high`;
     };
 
     db.getNature = function(subject) {
-        // TODO
-        return "Doesn't have many preferences, enjoys most everything.";
+        switch (subject.nature) {
+            case Natures.NEUTRAL:
+                return "Doesn't have many preferences, enjoys most everything.";
+            default:
+                return "Nature unknown.";
+        }
     };
 
     db.getStatUpgrade = function(stat, value) {
         var multiplier = 100;
         var decimals = value < 1 ? 2 : 0;
-        if (stat == "endurance.regen") {
+        if (stat == Fields.ENDURANCE_REGEN) {
             multiplier = 50000;
         }
-        if (stat == "stamina.regen") {
+        if (stat == Fields.STAMINA_REGEN) {
             multiplier = 100000;
         }
-        if (stat == "power") {
+        if (stat == Fields.POWER) {
             multiplier = 25000;
         }
-        if (stat == "laffs") {
+        if (stat == Fields.LAFFS) {
             multiplier = 200;
         }
 

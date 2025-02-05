@@ -1,5 +1,9 @@
 ﻿class VersionHistory {
     static history = [
+        new Version("v0.1.0.9-dev", "2025-02-05", [
+            "Created \"enums\" to hold certain constants to minimize typing errors",
+            "Removed field \"image\" from subject data as for now the species field alone should suffice"
+        ]),
         new Version("v0.1.0.8-dev", "2025-02-05", [
             "Fixed an exploit from restarting a run multiple times without refreshing the page"
         ]),

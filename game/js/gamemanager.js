@@ -70,7 +70,7 @@
     };
 
     manager.updateImage = function($card, subject) {
-        var $img = $card.find("[data-stat='state']");
+        var $img = $card.findByField(Fields.STATE);
         $img.removeClass().addClass(game.db.getSubjectImage(subject));
     }
 
@@ -79,74 +79,63 @@
             return;
         }
         
-        var $name = $card.find("[data-stat='name']");
+        var $name = $card.findByField(Fields.NAME);
         $name.text(subject.name);
 
         manager.updateImage($card, subject);
 
-        var $clickable = $card.find("[data-stat='clickable']");
+        var $clickable = $card.findByField(Fields.CLICKABLE);
         $clickable.on("dragstart", function () {
             return false;
         });
         $clickable.mousedown(function () {
-            if (subject.state == "idle") {
-                subject.state = "tickled";
+            if (subject.state == TickledStates.IDLE) {
+                subject.state = TickledStates.TICKLED;
                 subject.tickleDelay = 750;
             }
         });
         $clickable.mouseup(function () {
-            if (subject.state == "tickled") {
-                subject.state = "idle";
+            if (subject.state == TickledStates.TICKLED) {
+                subject.state = TickledStates.IDLE;
                 subject.tickleDelay = 750;
             }
         });
         $clickable.mouseleave(function() {
-            if (subject.state == "tickled") {
-                subject.state = "idle";
+            if (subject.state == TickledStates.TICKLED) {
+                subject.state = TickledStates.IDLE;
                 subject.tickleDelay = 750;
             }
         });
+
+        var tickleSubject = function(multiplier) {
+            multiplier = multiplier || 1;
+            var endurance = subject.endurance;
+            var stamina = subject.stamina;
+            var power = game.data.laffs.power;
+
+            endurance.current = Math.max(0, endurance.current - power * multiplier);
+            stamina.current = Math.max(0, stamina.current - power * multiplier);
+
+            if (endurance.current <= 0 && stamina.current > 0) {
+                var laffs = game.data.laffs;
+                var earned = (subject.laffs + laffs.modifier) * laffs.factor * multiplier;
+                game.data.laffs.current += earned;
+            }
+
+            if (stamina.current <= 0) {
+                subject.state = TickledStates.FAINTED;
+            }
+        };
+
         $clickable.mousemove(function() {
-            var mouseMoveNerf = 10;
-            if (subject.state == "tickled") {
-                var endurance = subject.endurance;
-                var stamina = subject.stamina;
-                var power = game.data.laffs.power;
-
-                endurance.current = Math.max(0, endurance.current - power / mouseMoveNerf);
-                stamina.current = Math.max(0, stamina.current - power / mouseMoveNerf);
-
-                if (endurance.current <= 0 && stamina.current > 0) {
-                    var laffs = game.data.laffs;
-                    var earned = (subject.laffs + laffs.modifier) * laffs.factor / mouseMoveNerf;
-                    game.data.laffs.current += earned;
-                }
-
-                if (stamina.current <= 0) {
-                    subject.state = "fainted";
-                }
+            if (subject.state == TickledStates.TICKLED) {
+                tickleSubject(0.1);
             }
         });
         $clickable.click(function() {
-            if (subject.state != "fainted") {
+            if (subject.state != TickledStates.FAINTED) {
                 subject.tickleDelay = 750;
-
-                var endurance = subject.endurance;
-                var stamina = subject.stamina;
-                var power = game.data.laffs.power;
-                
-                endurance.current = Math.max(0, endurance.current - power);
-                stamina.current = Math.max(0, stamina.current - power);
-                
-                if (endurance.current <= 0 && stamina.current > 0) {
-                    var laffs = game.data.laffs;
-                    var earned = (subject.laffs + laffs.modifier) * laffs.factor;
-                    game.data.laffs.current += earned;
-                }
-                
-                if (stamina.current <= 0) {
-                    subject.state = "fainted";
-                }
+                tickleSubject();
             }
         });
     };
@@ -159,11 +148,11 @@
             var $card = $template.clone();
             $card.attr("data-subject", subject.id);
             $card.css("display", "");
-            $("[data-stat='name']", $card).text(subject.name);
+            $card.findByField(Fields.NAME).text(subject.name);
 
             $destination.append($card);
 
-            subject.state = "idle";
+            subject.state = TickledStates.IDLE;
             subject.tickleDelay = 0;
 
             manager.setupSubjectCard($card, subject);
@@ -208,17 +197,17 @@
                 var endurance = subject.endurance;
                 var stamina = subject.stamina;
 
-                if (subject.state != "tickled" && subject.autostate != "tickled") {
+                if (subject.state != TickledStates.TICKLED && subject.autostate != TickledStates.TICKLED) {
                     var stat = stamina.current < stamina.max ? stamina : endurance;
                     stat.current = Math.min(stat.max, stat.current + stat.regen);
 
-                    if (subject.state == "fainted" && stamina.current == stamina.max && endurance.current == endurance.max) {
-                        subject.state = "idle";
+                    if (subject.state == TickledStates.FAINTED && stamina.current == stamina.max && endurance.current == endurance.max) {
+                        subject.state = TickledStates.IDLE;
                     }
                 }
 
-                var $enduranceBar = $card.find(".progress[data-stat='endurance'] .progress-bar");
-                var $staminaBar = $card.find(".progress[data-stat='stamina'] .progress-bar");
+                var $enduranceBar = $card.findByField(Fields.ENDURANCE).find(".progress-bar");
+                var $staminaBar = $card.findByField(Fields.STAMINA).find(".progress-bar");
 
                 var updateBar = function($bar, stat) {
                     $bar.attr({
@@ -281,11 +270,11 @@
 
         var $modal = $("#subjectInfoModal");
 
-        $modal.find("[data-stat='profile']").removeClass().addClass(game.db.getSubjectProfile(subject));
+        $modal.findByField(Fields.PROFILE).removeClass().addClass(game.db.getSubjectProfile(subject));
 
-        $modal.find("[data-stat='id']").text(subject.id);
-        $modal.find("[data-stat='name']").text(subject.name);
-        $modal.find("[data-stat='species']").text(subject.species);
+        $modal.findByField(Fields.ID).text(subject.id);
+        $modal.findByField(Fields.NAME).text(subject.name);
+        $modal.findByField(Fields.SPECIES).text(subject.species);
 
         var buyUpgrade = function(stat) {
             var value = 0;
@@ -306,7 +295,7 @@
                 var stat1 = aux[0];
                 var stat2 = aux[1];
                 subject[stat1][stat2] = upgrade.nextValue;
-                if (stat2 == "max" && typeof subject[stat1].current !== "undefined") {
+                if (stat2 == Fields.MAX && typeof subject[stat1].current !== "undefined") {
                     subject[stat1].current += upgrade.nextValue - value;
                 }
             }
@@ -316,12 +305,12 @@
         };
 
         var updateStats = function() {
-            $modal.find("[data-stat='endurance.max']").text(subject.endurance.max);
-            $modal.find("[data-stat='endurance.regen']").text(subject.endurance.regen);
-            $modal.find("[data-stat='stamina.max']").text(subject.stamina.max);
-            $modal.find("[data-stat='stamina.regen']").text(subject.stamina.regen);
-            $modal.find("[data-stat='laffs']").text(subject.laffs);
-            $modal.find("[data-stat='power']").text(subject.power);
+            $modal.findByField(Fields.ENDURANCE_MAX).text(subject.endurance.max);
+            $modal.findByField(Fields.ENDURANCE_REGEN).text(subject.endurance.regen);
+            $modal.findByField(Fields.STAMINA_MAX).text(subject.stamina.max);
+            $modal.findByField(Fields.STAMINA_REGEN).text(subject.stamina.regen);
+            $modal.findByField(Fields.LAFFS).text(subject.laffs);
+            $modal.findByField(Fields.POWER).text(subject.power);
         
             $modal.find("[data-target-stat]").each(function(i, el) {
                 var $btn = $(el);
@@ -358,7 +347,7 @@
                 }
 
                 var diffText = Util.prettifyNumber(upgrade.diff);
-                if (stat == "endurance.regen" || stat == "stamina.regen" || stat == "power") {
+                if (stat == Fields.ENDURANCE_REGEN || stat == Fields.STAMINA_REGEN || stat == Fields.POWER) {
                     if (upgrade.diff < 10) {
                         diffText = upgrade.diff.toString();
                     }
@@ -380,7 +369,7 @@
         updateStats();
 
         var nature = game.db.getNature(subject);
-        $modal.find("[data-stat='nature']").text(nature);
+        $modal.findByField(Fields.NATURE).text(nature);
 
         $modal.modal("show");
     };
