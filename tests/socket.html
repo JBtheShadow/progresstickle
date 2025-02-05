@@ -1,0 +1,108 @@
+<h1>Websocket test</h1>
+
+<label>Host and port:
+    <input id="txtHostAndPort" type="text" />
+</label>
+<label>
+    Slot name:
+    <input id="txtSlotName" type="text" />
+</label>
+<label>
+    Game name:
+    <input id="txtGameName" type="text" />
+</label>
+<label>
+    Password:
+    <input id="txtPassword" type="text" />
+</label>
+<button id="btnConnect" onclick="connect();">Connect</button>
+<button id="btnDisconnect" onclick="disconnect();">Disconnect</button>
+
+<script>
+    var ws;
+
+    function connect() {
+        var hostAndPort = document.getElementById("txtHostAndPort").value;
+
+        if (ws) return;
+        ws = new WebSocket(`wss://${hostAndPort}`);
+
+        ws.addEventListener("open", (event) => {
+            console.log("Connection opened");
+        });
+
+        ws.addEventListener("message", (event) => {
+            console.log("Received message");
+            console.log(event.data);
+            handle(event.data);
+        });
+    }
+
+    function disconnect() {
+        if (!ws) return;
+
+        ws.close();
+        ws = null;
+
+        console.log("Connection closed");
+    }
+
+    function handle(json) {
+        var data = JSON.parse(json);
+        for (var packet of data) {
+            handlePacket(packet);
+        }
+    }
+
+    function handlePacket(packet)  {
+        switch (packet.cmd) {
+            case "RoomInfo":
+                //getDataPackage();
+                connectToRoom();
+                break;
+            case "DataPackage":
+                break;
+        }
+    }
+
+    function sendPacket(packet) {
+        ws.send(JSON.stringify(packet));
+    }
+
+    function getDataPackage() {
+        sendPacket([{cmd:"GetDataPackage"}]);
+    }
+
+    function generateUUID() { // Public Domain/MIT
+        var d = new Date().getTime();//Timestamp
+        var d2 = ((typeof performance !== 'undefined') && performance.now && (performance.now()*1000)) || 0;//Time in microseconds since page-load or 0 if unsupported
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+            var r = Math.random() * 16;//random number between 0 and 16
+            if(d > 0){//Use timestamp until depleted
+                r = (d + r)%16 | 0;
+                d = Math.floor(d/16);
+            } else {//Use microseconds since page-load if supported
+                r = (d2 + r)%16 | 0;
+                d2 = Math.floor(d2/16);
+            }
+            return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+        });
+    }
+
+    const NO_RECEIVED_ITEMS = 0b000;
+    const RECEIVE_ITEMS_FROM_OTHERS = 0b001;
+    const RECEIVE_ITEMS_FROM_YOURSELF = 0b010;
+    const RECEIVE_STARTING_INVENTORY = 0b100;
+
+    function connectToRoom() {
+        var password = document.getElementById("txtPassword").value;
+        var game = document.getElementById("txtGameName").value;
+        var name = document.getElementById("txtSlotName").value;
+        var uuid = generateUUID();
+        var version = { class: "Version", major: 0, minor: 5, build: 1 };
+        var items_handling = RECEIVE_ITEMS_FROM_OTHERS | RECEIVE_ITEMS_FROM_YOURSELF | RECEIVE_STARTING_INVENTORY;
+        var tags = [];
+        var slot_data = false;
+        sendPacket([{cmd: "Connect", password: password, game: game, name: name, uuid: uuid, version: version, items_handling: items_handling, tags: [], slot_data: slot_data }]);
+    }
+</script>
