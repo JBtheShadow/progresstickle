@@ -28,7 +28,7 @@
             manager.setup();
 
             $("#chkAutosave").prop("checked", game.data.autosave);
-            $("#lastSaved").html("last saved: <br/>" + game.util.prettifyDate(game.data.lastSaveTime));
+            $("#lastSaved").html("last saved: <br/>" + Util.prettifyDate(game.data.lastSaveTime));
 
             $("[data-page]").hide();
             $("[data-page='game']").show();
@@ -44,7 +44,7 @@
             game.data.lastSaveTime = new Date().getTime();
             game.data.version = VersionHistory.latest;
             game.dataManager.save("data", game.data);
-            $("#lastSaved").html("last saved: <br/>" + game.util.prettifyDate(game.data.lastSaveTime));
+            $("#lastSaved").html("last saved: <br/>" + Util.prettifyDate(game.data.lastSaveTime));
         }
     };
 
@@ -62,6 +62,8 @@
 
         game.dataManager.delete("data");
         game.data = null;
+
+        $("#testSubjects").html("");
 
         $("[data-page]").hide();
         $("[data-page='intro']").show();
@@ -105,17 +107,18 @@
             }
         });
         $clickable.mousemove(function() {
+            var mouseMoveNerf = 10;
             if (subject.state == "tickled") {
                 var endurance = subject.endurance;
                 var stamina = subject.stamina;
                 var power = game.data.laffs.power;
 
-                endurance.current = Math.max(0, endurance.current - power / 5);
-                stamina.current = Math.max(0, stamina.current - power / 5);
+                endurance.current = Math.max(0, endurance.current - power / mouseMoveNerf);
+                stamina.current = Math.max(0, stamina.current - power / mouseMoveNerf);
 
                 if (endurance.current <= 0 && stamina.current > 0) {
                     var laffs = game.data.laffs;
-                    var earned = (subject.laffs + laffs.modifier) * laffs.factor / 5;
+                    var earned = (subject.laffs + laffs.modifier) * laffs.factor / mouseMoveNerf;
                     game.data.laffs.current += earned;
                 }
 
@@ -149,25 +152,22 @@
     };
 
     manager.setupSubjects = function() {
-        $(".card[data-subject]").each(function(i, el) {
-            var $card = $(el);
-            var id = Number($card.attr("data-subject"));
+        var $destination = $("#testSubjects");
+        var $template = $("#templateSubject");
 
-            var data = game.data;
-            if (!data) {
-                return;
-            }
-            var subject = $(data.subjects || []).filter(function(i, el) {
-                return el.id == id;
-            }).get(0);
-            if (!subject) {
-                return;
-            }
+        for (subject of game.data.subjects) {
+            var $card = $template.clone();
+            $card.attr("data-subject", subject.id);
+            $card.css("display", "");
+            $("[data-stat='name']", $card).text(subject.name);
+
+            $destination.append($card);
+
             subject.state = "idle";
             subject.tickleDelay = 0;
 
             manager.setupSubjectCard($card, subject);
-        });
+        }
     };
 
     manager.setupInterval = function() {
@@ -175,7 +175,7 @@
             $("#fundsText").each(function(i, el) {
                 var $text = $(el);
                 var current = game.data.laffs.current;
-                var pretty = game.util.prettifyNumber(current);
+                var pretty = Util.prettifyNumber(current);
                 $text.text(pretty);
             });
 
@@ -306,6 +306,9 @@
                 var stat1 = aux[0];
                 var stat2 = aux[1];
                 subject[stat1][stat2] = upgrade.nextValue;
+                if (stat2 == "max" && typeof subject[stat1].current !== "undefined") {
+                    subject[stat1].current += upgrade.nextValue - value;
+                }
             }
             else {
                 subject[stat] = upgrade.nextValue;
@@ -354,7 +357,7 @@
                     $btn.removeClass("disabled");
                 }
 
-                var diffText = game.util.prettifyNumber(upgrade.diff);
+                var diffText = Util.prettifyNumber(upgrade.diff);
                 if (stat == "endurance.regen" || stat == "stamina.regen" || stat == "power") {
                     if (upgrade.diff < 10) {
                         diffText = upgrade.diff.toString();
@@ -369,7 +372,7 @@
                     }
                 }
 
-                var costText = game.util.prettifyNumber(upgrade.cost);
+                var costText = Util.prettifyNumber(upgrade.cost);
 
                 $btn.text("+" + diffText + "/" + costText + " laffs");
             });
