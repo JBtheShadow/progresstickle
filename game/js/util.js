@@ -26,6 +26,11 @@ class Util {
         return integer + (Util.units[ind] ? decimal + Util.units[ind] : "");
     }
 
+    /**
+     * Takes a number of milliseconds and formats it as a date
+     * @param {Number} ticks Number in milliseconds
+     * @returns {String} Date formatted as yyyy-MM-dd HH:mm:ss AM/PM
+     */
     static prettifyDate(ticks) {
         var d = new Date(ticks);
         
@@ -51,6 +56,11 @@ class Util {
         return year + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + second + " " + timeOfDay;
     };
 
+    /**
+     * Capitalizes the first letter of a string
+     * @param {string} text Text to capitalize
+     * @returns {string} Capitalized text
+     */
     static capitalize(text) {
         text.charAt(0).toUpperCase() + text.slice(1)
     }

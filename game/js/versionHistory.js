@@ -1,5 +1,9 @@
 ﻿class VersionHistory {
     static history = [
+        new Version["v0.1.0.12-dev", "2025-02-06", [
+            "Investigating type hint annotations for source code",
+            "Removed ease animation on progress bars for more accurate display of health"
+        ]],
         new Version("v0.1.0.11-dev", "2025-02-06", [
             "Fixed bug where stats were no longer viewable since changing the first subject id from 0 to 1",
             "Id 0 was hardcoded in the template, changed that"

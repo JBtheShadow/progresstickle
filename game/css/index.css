@@ -27,6 +27,11 @@ table th {
     display: none;
 }
 
+.progress-bar {
+    -webkit-transition: none !important;
+    transition: none !important;
+}
+
 .subject-img {
     width: 198px;
     height: 193px;
