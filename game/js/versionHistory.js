@@ -1,5 +1,12 @@
 ﻿class VersionHistory {
     static history = [
+        new Version("v0.1.0.10-dev", "2025-02-06", [
+            "Renamed datamanager to storage and migrated it to class notation",
+            "Fixed an image loading bug, species wasn't being set on new game",
+            "TODO: tweak with reaction expression logic to better match some name changes",
+            "Expressions themselves could be animated too",
+            "TODO: algo gotta fix a bug when stamina recovers faster than it can be drained"
+        ]),
         new Version("v0.1.0.9-dev", "2025-02-05", [
             "Created \"enums\" to hold certain constants to minimize typing errors",
             "Removed field \"image\" from subject data as for now the species field alone should suffice"

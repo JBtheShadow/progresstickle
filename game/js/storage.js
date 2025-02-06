@@ -1,22 +1,22 @@
-(function() {
-    var manager = game.dataManager = {};
+class Storage {
+    static key = "data";
 
-    manager.useLocalStorage = function() {
+    static useLocalStorage() {
         return typeof localStorage !== "undefined";
-    };
-    
-    manager.load = function(key) {
-        var safeBase64 = this.loadFromCookie(key);
+    }
+
+    static load() {
+        var safeBase64 = Storage.loadFromCookie(Storage.key);
         
         // Start using local storage, preferably, if it exists
         // Some save data may have been saved in cookies before so move that data to storage
-        if (this.useLocalStorage()) {
+        if (Storage.useLocalStorage()) {
             if (safeBase64) {
-                this.saveInStorage(key, safeBase64);
-                this.deleteFromCookie(key);
+                Storage.saveInStorage(Storage.key, safeBase64);
+                Storage.deleteFromCookie(Storage.key);
             }
             else {
-                safeBase64 = this.loadFromStorage(key);
+                safeBase64 = Storage.loadFromStorage(Storage.key);
             }
         }
 
@@ -31,17 +31,17 @@
         var base64 = safeBase64.replace(/#/g, "=");
         var sData = atob(base64);
         return JSON.parse(sData);
-    };
+    }
 
-    manager.loadFromStorage = function(key) {
+    static loadFromStorage(key) {
         if (typeof localStorage === "undefined") {
             return;
         }
         
         return localStorage.getItem(key);
-    };
+    }
 
-    manager.loadFromCookie = function(key) {
+    static loadFromCookie(key) {
         var cookie = document.cookie;
         if (!cookie) {
             return;
@@ -56,47 +56,47 @@
                 return keyValue[1];
             }
         }
-    };
+    }
 
-    manager.save = function(key, data) {
+    static save(data) {
         var sData = JSON.stringify(data);
         var base64 = btoa(sData);
         var safeBase64 = base64.replace(/=/g, "#");
 
-        if (this.useLocalStorage()) {
-            this.saveInStorage(key, safeBase64);
+        if (Storage.useLocalStorage()) {
+            Storage.saveInStorage(Storage.key, safeBase64);
         }
         else {
-            this.saveInCookie(key, safeBase64);
+            Storage.saveInCookie(Storage.key, safeBase64);
         }
-    };
+    }
 
-    manager.saveInStorage = function(key, value) {
+    static saveInStorage(key, value) {
         if (typeof localStorage === "undefined") {
             return;
         }
 
         localStorage.setItem(key, value);
-    };
+    }
 
-    manager.saveInCookie = function(key, value) {
+    static saveInCookie(key, value) {
         var d = new Date();
         d.setTime(d.getTime() + (365 * 24 * 60 * 60 * 1000));
         var expires = "expires=" + d.toUTCString();
         var cookie = key + "=" + value + "; " + expires + "; path=/";
         document.cookie = cookie;
-    };
+    }
 
-    manager.delete = function(key) {
-        if (this.useLocalStorage()) {
-            this.deleteFromStorage(key);
+    static delete() {
+        if (Storage.useLocalStorage()) {
+            Storage.deleteFromStorage(Storage.key);
         }
         else {
-            this.deleteFromCookie(key);
+            Storage.deleteFromCookie(Storage.key);
         }
-    };
+    }
 
-    manager.deleteFromStorage = function(key) {
+    static deleteFromStorage = function(key) {
         if (typeof localStorage === "undefined") {
             return;
         }
@@ -104,11 +104,11 @@
         localStorage.removeItem(key);
     };
 
-    manager.deleteFromCookie = function(key) {
+    static deleteFromCookie = function(key) {
         var d = new Date();
         d.setTime(d.getTime() - 1);
         var expires = "expires=" + d.toUTCString();
         var cookie = key + "=; " + expires + "; path=/";
         document.cookie = cookie;
     };
-})();
+}

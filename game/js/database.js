@@ -15,7 +15,7 @@
         return {
             id: id,
             name: name,
-            species: Species.Demonling,
+            species: Species.DEMONLING,
             endurance: {
                 current: 5,
                 max: 5,
@@ -88,6 +88,8 @@
         $(data.subjects).each(function(i, el) {
             if (typeof el.species === "string") {
                 el.species = el.species.toLowerCase();
+            } else if (typeof el.species === "undefined") {
+                el.species = Species.DEMONLING;
             }
             if (typeof el.nature === "undefined") {
                 el.nature = Natures.NEUTRAL;

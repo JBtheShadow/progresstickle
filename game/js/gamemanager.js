@@ -12,12 +12,12 @@
         }
 
         game.data = game.db.initializeGameData();
-        game.dataManager.save("data", game.data);
+        Storage.save(game.data);
         manager.load();
     };
 
     manager.load = function() {
-        game.data = game.dataManager.load("data");
+        game.data = Storage.load();
         if (game.data) {
             game.data = game.db.normalizeGameData(game.data);
 
@@ -43,7 +43,7 @@
         if (game.data) {
             game.data.lastSaveTime = new Date().getTime();
             game.data.version = VersionHistory.latest;
-            game.dataManager.save("data", game.data);
+            Storage.save(game.data);
             $("#lastSaved").html("last saved: <br/>" + Util.prettifyDate(game.data.lastSaveTime));
         }
     };
@@ -60,7 +60,7 @@
             manager.updateInterval = null;
         }
 
-        game.dataManager.delete("data");
+        Storage.delete();
         game.data = null;
 
         $("#testSubjects").html("");
