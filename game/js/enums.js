@@ -16,7 +16,8 @@ const Fields = {
     ENDURANCE_MAX: "endurance.max",
     ENDURANCE_REGEN: "endurance.regen",
     STAMINA_MAX: "stamina.max",
-    STAMINA_REGEN: "stamina.regen"
+    STAMINA_REGEN: "stamina.regen",
+    VIEW_STATS: "view-stats"
 }
 
 const Species = {

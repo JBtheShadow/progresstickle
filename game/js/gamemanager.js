@@ -149,6 +149,7 @@
             $card.attr("data-subject", subject.id);
             $card.css("display", "");
             $card.findByField(Fields.NAME).text(subject.name);
+            $card.findByField(Fields.VIEW_STATS).click(_ => manager.viewSubject(subject.id));
 
             $destination.append($card);
 
@@ -274,7 +275,7 @@
 
         $modal.findByField(Fields.ID).text(subject.id);
         $modal.findByField(Fields.NAME).text(subject.name);
-        $modal.findByField(Fields.SPECIES).text(subject.species);
+        $modal.findByField(Fields.SPECIES).text(Util.capitalize(subject.species));
 
         var buyUpgrade = function(stat) {
             var value = 0;

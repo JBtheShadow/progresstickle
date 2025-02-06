@@ -1,12 +1,12 @@
 class Util {
     static units = ["", "k", "M", "B", "T", "q", "Q", "s", "S", "O", "N", "d", "U", "D"];
 
-    static groupDigits = function(number) {
+    static groupDigits(number) {
         var str = number.toFixed(0);
         return str.replace(/(\d)(?=(\d{3})+$)/g, '$1,');
     }
 
-    static prettifyNumber = function(number) {
+    static prettifyNumber(number) {
         var exp = number.toExponential(3);
         var power = Number(exp.split('e')[1]);
         var ind = Math.floor(power / 3);
@@ -26,7 +26,7 @@ class Util {
         return integer + (Util.units[ind] ? decimal + Util.units[ind] : "");
     }
 
-    static prettifyDate = function(ticks) {
+    static prettifyDate(ticks) {
         var d = new Date(ticks);
         
         var hourNumber = d.getHours();
@@ -50,4 +50,8 @@ class Util {
 
         return year + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + second + " " + timeOfDay;
     };
+
+    static capitalize(text) {
+        text.charAt(0).toUpperCase() + text.slice(1)
+    }
 }

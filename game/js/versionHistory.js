@@ -1,5 +1,9 @@
 ﻿class VersionHistory {
     static history = [
+        new Version("v0.1.0.11-dev", "2025-02-06", [
+            "Fixed bug where stats were no longer viewable since changing the first subject id from 0 to 1",
+            "Id 0 was hardcoded in the template, changed that"
+        ]),
         new Version("v0.1.0.10-dev", "2025-02-06", [
             "Renamed datamanager to storage and migrated it to class notation",
             "Fixed an image loading bug, species wasn't being set on new game",
