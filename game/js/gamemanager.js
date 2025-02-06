@@ -11,7 +11,7 @@
             this.updateInterval = null;
         }
 
-        game.data = game.db.initializeGameData();
+        game.data = Database.initializeGameData();
         Storage.save(game.data);
         manager.load();
     };
@@ -19,7 +19,7 @@
     manager.load = function() {
         game.data = Storage.load();
         if (game.data) {
-            game.data = game.db.normalizeGameData(game.data);
+            game.data = Database.normalizeGameData(game.data);
 
             if (game.data.version != VersionHistory.latest) {
                 $("#versionInfoModal").modal("show");
@@ -71,7 +71,7 @@
 
     manager.updateImage = function($card, subject) {
         var $img = $card.findByField(Fields.STATE);
-        $img.removeClass().addClass(game.db.getSubjectImage(subject));
+        $img.removeClass().addClass(Database.getSubjectImage(subject));
     }
 
     manager.setupSubjectCard = function($card, subject) {
@@ -271,7 +271,7 @@
 
         var $modal = $("#subjectInfoModal");
 
-        $modal.findByField(Fields.PROFILE).removeClass().addClass(game.db.getSubjectProfile(subject));
+        $modal.findByField(Fields.PROFILE).removeClass().addClass(Database.getSubjectProfile(subject));
 
         $modal.findByField(Fields.ID).text(subject.id);
         $modal.findByField(Fields.NAME).text(subject.name);
@@ -289,7 +289,7 @@
                 value = subject[stat];
             }
 
-            var upgrade = game.db.getStatUpgrade(stat, value);
+            var upgrade = Database.getStatUpgrade(stat, value);
             game.data.laffs.current = Math.max(0, game.data.laffs.current - upgrade.cost);
             if (stat.indexOf(".") > -1) {
                 var aux = stat.split(".");
@@ -336,7 +336,7 @@
                     value = subject[stat];
                 }
 
-                var upgrade = game.db.getStatUpgrade(stat, value);
+                var upgrade = Database.getStatUpgrade(stat, value);
 
                 $btn.attr("data-cost", upgrade.cost);
 
@@ -369,7 +369,7 @@
         };
         updateStats();
 
-        var nature = game.db.getNature(subject);
+        var nature = Database.getNature(subject);
         $modal.findByField(Fields.NATURE).text(nature);
 
         $modal.modal("show");

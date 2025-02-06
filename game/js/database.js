@@ -1,17 +1,17 @@
-(function() {
-    var db = game.db = {};
-    var imageData = db.imageData = {};
-    imageData.thresholds = [1, 0.9, 0.6, 0.3, 0];
-    imageData.states = [
-        StaminaLevels.FULL,
-        StaminaLevels.HIGH,
-        StaminaLevels.HALF,
-        StaminaLevels.LOW,
-        StaminaLevels.WEAK,
-        StaminaLevels.FAINTED
-    ];
+class Database {
+    static imageData = {
+        thresholds: [1, 0.9, 0.6, 0.3, 0],
+        states: [
+            StaminaLevels.FULL,
+            StaminaLevels.HIGH,
+            StaminaLevels.HALF,
+            StaminaLevels.LOW,
+            StaminaLevels.WEAK,
+            StaminaLevels.FAINTED
+        ]
+    };
 
-    db.defaultDemonling = function(id, name, roomId) {
+    static defaultDemonling(id, name, roomId) {
         return {
             id: id,
             name: name,
@@ -32,16 +32,16 @@
             nature: Natures.NEUTRAL,
             room: roomId
         };
-    };
+    }
 
-    db.defaultRoom = function(id) {
+    static defaultRoom(id) {
         return {
             id: id,
             name: `Room #${id}`
         };
-    };
+    }
 
-    db.startingLaffs = function() {
+    static startingLaffs() {
         return {
             current: 0,
             power: 0.1,
@@ -50,24 +50,21 @@
         };
     }
 
-    db.initializeGameData = function() {
-        var data = {};
-        data.startTime = new Date().getTime();
-        data.lastSaveTime = new Date().getTime();
-        data.autosave = true;
-        data.version = VersionHistory.latest;
-        data.subjects = [];
-        data.subjects.push(db.defaultDemonling(1, "David", 1));
-        data.rooms = [];
-        data.rooms.push(db.defaultRoom(1));
-        data.laffs = db.startingLaffs();
+    static initializeGameData() {
+        return {
+            startTime: new Date().getTime(),
+            lastSaveTime: new Date().getTime(),
+            autosave: true,
+            version: VersionHistory.latest,
+            subjects: [Database.defaultDemonling(1, "David", 1)],
+            rooms: [Database.defaultRoom(1)],
+            laffs: Database.startingLaffs()
+        };
+    }
 
-        return data;
-    };
-
-    db.normalizeGameData = function(data) {
+    static normalizeGameData(data) {
         if (!data) {
-            return this.initializeGameData();
+            return Database.initializeGameData();
         }
 
         if (typeof data.startTime === "undefined") {
@@ -83,7 +80,7 @@
             data.subjects = [];
         }
         if (!data.subjects || !data.subjects.length) {
-            data.subjects.push(db.defaultDemonling(1, "David", 1));
+            data.subjects.push(Database.defaultDemonling(1, "David", 1));
         }
         $(data.subjects).each(function(i, el) {
             if (typeof el.species === "string") {
@@ -106,16 +103,16 @@
             data.rooms = [];
         }
         if (!data.rooms || !data.rooms.length) {
-            data.rooms.push(db.defaultRoom(1));
+            data.rooms.push(Database.defaultRoom(1));
         }
         if (typeof data.laffs === "undefined") {
-            data.laffs = db.startingLaffs();
+            data.laffs = Database.startingLaffs();
         }
 
         return data;
-    };
+    }
 
-    db.getSpeciesImage = function(species) {
+    static getSpeciesImage(species) {
         switch (species) {
             case Species.DEMONLING:
                 return SpeciesImages.DEMONLING;
@@ -132,7 +129,7 @@
         }
     }
 
-    db.getSubjectImage = function(subject) {
+    static getSubjectImage(subject) {
         if (!subject && !subject.state) {
             return;
         }
@@ -152,8 +149,8 @@
             index = 5;
         }
         else {
-            for (var i = 0; i < imageData.thresholds.length; i++) {
-                var threshold = imageData.thresholds[i];
+            for (var i = 0; i < Database.imageData.thresholds.length; i++) {
+                var threshold = Database.imageData.thresholds[i];
                 if (percStamina >= threshold) {
                     index = i;
                     break;
@@ -179,22 +176,22 @@
             reaction = Reactions.RESISTING;
         }
 
-        var subjectImage = db.getSpeciesImage(subject.species);
+        var subjectImage = Database.getSpeciesImage(subject.species);
 
-        return `subject-img ${subjectImage} ${reaction} ${imageData.states[index]}`;
-    };
+        return `subject-img ${subjectImage} ${reaction} ${Database.imageData.states[index]}`;
+    }
 
-    db.getSubjectProfile = function(subject) {
+    static getSubjectProfile(subject) {
         if (!subject) {
             return;
         }
 
-        var subjectImage = db.getSpeciesImage(subject.species);
+        var subjectImage = Database.getSpeciesImage(subject.species);
 
         return `subject-img ${subjectImage} idle high`;
     };
 
-    db.getNature = function(subject) {
+    static getNature(subject) {
         switch (subject.nature) {
             case Natures.NEUTRAL:
                 return "Doesn't have many preferences, enjoys most everything.";
@@ -203,7 +200,7 @@
         }
     };
 
-    db.getStatUpgrade = function(stat, value) {
+    static getStatUpgrade(stat, value) {
         var multiplier = 100;
         var decimals = value < 1 ? 2 : 0;
         if (stat == Fields.ENDURANCE_REGEN) {
@@ -225,4 +222,4 @@
 
         return { cost: cost, nextValue: nextValue, diff: diff };
     };
-})();
+}
