@@ -62,6 +62,6 @@ class Util {
      * @returns {string} Capitalized text
      */
     static capitalize(text) {
-        text.charAt(0).toUpperCase() + text.slice(1)
+        return text.charAt(0).toUpperCase() + text.slice(1);
     }
 }

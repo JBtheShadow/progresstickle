@@ -1,34 +1,32 @@
-(function() {
-    var manager = game.gameManager = {};
+class GameManager {
+    static autoSaveTime = 1000 * 60 * 5;
+    static updateTime = 50;
+    static updateHandle = null;
 
-    manager.autosaveTime = 1000 * 60 * 5;
-    manager.updateTime = 50;
-    manager.updateInterval = null;
-
-    manager.start = function() {
-        if (this.updateInterval) {
-            clearInterval(this.updateInterval);
-            this.updateInterval = null;
+    static clearUpdateHandle() {
+        if (GameManager.updateHandle) {
+            clearInterval(GameManager.updateHandle);
+            GameManager.updateHandle = null;
         }
+    }
 
-        game.data = Database.initializeGameData();
-        Storage.save(game.data);
-        manager.load();
-    };
+    static start() {
+        GameManager.clearUpdateHandle();
+        Storage.initialize();
+        GameManager.load();
+    }
 
-    manager.load = function() {
-        game.data = Storage.load();
-        if (game.data) {
-            game.data = Database.normalizeGameData(game.data);
-
-            if (game.data.version != VersionHistory.latest) {
+    static load() {
+        Storage.load();
+        if (Storage.data) {
+            if (Storage.data.version != VersionHistory.latest) {
                 $("#versionInfoModal").modal("show");
             }
 
-            manager.setup();
+            GameManager.setup();
 
-            $("#chkAutosave").prop("checked", game.data.autosave);
-            $("#lastSaved").html("last saved: <br/>" + Util.prettifyDate(game.data.lastSaveTime));
+            $("#chkAutoSave").prop("checked", Storage.data.autoSave);
+            $("#lastSaved").html("last saved: <br/>" + Util.prettifyDate(Storage.data.lastSaveTime));
 
             $("[data-page]").hide();
             $("[data-page='game']").show();
@@ -39,29 +37,24 @@
         }
     };
 
-    manager.save = function() {
-        if (game.data) {
-            game.data.lastSaveTime = new Date().getTime();
-            game.data.version = VersionHistory.latest;
-            Storage.save(game.data);
-            $("#lastSaved").html("last saved: <br/>" + Util.prettifyDate(game.data.lastSaveTime));
+    static save() {
+        if (Storage.data) {
+            Storage.data.lastSaveTime = new Date().getTime();
+            Storage.data.version = VersionHistory.latest;
+            Storage.save();
+            $("#lastSaved").html("last saved: <br/>" + Util.prettifyDate(Storage.data.lastSaveTime));
         }
     };
 
-    manager.autosave = function() {
-        if (game.data && game.data.autosave) {
-            manager.save();
+    static autoSave() {
+        if (Storage.data && Storage.data.autoSave) {
+            Storage.save();
         }
     };
 
-    manager.doOver = function() {
-        if (manager.updateInterval) {
-            clearInterval(manager.updateInterval);
-            manager.updateInterval = null;
-        }
-
+    static doOver() {
+        GameManager.clearUpdateHandle();
         Storage.delete();
-        game.data = null;
 
         $("#testSubjects").html("");
 
@@ -69,12 +62,12 @@
         $("[data-page='intro']").show();
     };
 
-    manager.updateImage = function($card, subject) {
+    static updateImage($card, subject) {
         var $img = $card.findByField(Fields.STATE);
         $img.removeClass().addClass(Database.getSubjectImage(subject));
     }
 
-    manager.setupSubjectCard = function($card, subject) {
+    static setupSubjectCard($card, subject) {
         if (!$card || !subject) {
             return;
         }
@@ -82,7 +75,7 @@
         var $name = $card.findByField(Fields.NAME);
         $name.text(subject.name);
 
-        manager.updateImage($card, subject);
+        GameManager.updateImage($card, subject);
 
         var $clickable = $card.findByField(Fields.CLICKABLE);
         $clickable.on("dragstart", function () {
@@ -111,15 +104,15 @@
             multiplier = multiplier || 1;
             var endurance = subject.endurance;
             var stamina = subject.stamina;
-            var power = game.data.laffs.power;
+            var power = Storage.data.laffs.power;
 
             endurance.current = Math.max(0, endurance.current - power * multiplier);
             stamina.current = Math.max(0, stamina.current - power * multiplier);
 
             if (endurance.current <= 0 && stamina.current > 0) {
-                var laffs = game.data.laffs;
+                var laffs = Storage.data.laffs;
                 var earned = (subject.laffs + laffs.modifier) * laffs.factor * multiplier;
-                game.data.laffs.current += earned;
+                Storage.data.laffs.current += earned;
             }
 
             if (stamina.current <= 0) {
@@ -140,31 +133,43 @@
         });
     };
 
-    manager.setupSubjects = function() {
+    static setupSubjects() {
         var $destination = $("#testSubjects");
         var $template = $("#templateSubject");
 
-        for (subject of game.data.subjects) {
+        var $ddlSubjects = $("#ddlSubjects").empty();
+        for (var subject of Storage.data.subjects) {
             var $card = $template.clone();
             $card.attr("data-subject", subject.id);
             $card.css("display", "");
             $card.findByField(Fields.NAME).text(subject.name);
-            $card.findByField(Fields.VIEW_STATS).click(_ => manager.viewSubject(subject.id));
+            $card.findByField(Fields.VIEW_STATS).click(_ => GameManager.viewSubject(subject.id));
 
             $destination.append($card);
+
+            $("<a/>").addClass("dropdown-item").text(`#${subject.id}: ${subject.name}`)
+                .click(_ => GameManager.viewSubject(subject.id)).appendTo($ddlSubjects);
 
             subject.state = TickledStates.IDLE;
             subject.tickleDelay = 0;
 
-            manager.setupSubjectCard($card, subject);
+            GameManager.setupSubjectCard($card, subject);
         }
     };
 
-    manager.setupInterval = function() {
-        this.updateInterval = setInterval(function() {
+    static setupRooms() {
+        var $ddlRooms = $("#ddlRooms").empty();
+        for (var room of Storage.data.rooms) {
+            $("<a/>").addClass("dropdown-item").text(`#${room.id}: ${room.name} (${Util.capitalize(room.type)})`)
+                .click(_ => $("#roomInfoModal").modal("show")).appendTo($ddlRooms);
+        }
+    }
+
+    static setupUpdate() {
+        GameManager.updateHandle = setInterval(function() {
             $("#fundsText").each(function(i, el) {
                 var $text = $(el);
-                var current = game.data.laffs.current;
+                var current = Storage.data.laffs.current;
                 var pretty = Util.prettifyNumber(current);
                 $text.text(pretty);
             });
@@ -172,7 +177,7 @@
             $(".btn-upgrade[data-cost]").each(function(i, el) {
                 var $btn = $(el);
                 var cost = Number($btn.attr("data-cost"));
-                if (cost > game.data.laffs.current) {
+                if (cost > Storage.data.laffs.current) {
                     $btn.addClass("disabled");
                 }
                 else {
@@ -184,7 +189,7 @@
                 var $card = $(this);
                 var id = Number($card.attr("data-subject"));
     
-                var data = game.data;
+                var data = Storage.data;
                 if (!data) {
                     return;
                 }
@@ -221,44 +226,45 @@
                 updateBar($enduranceBar, endurance);
                 updateBar($staminaBar, stamina);
 
-                subject.tickleDelay = Math.max(0, subject.tickleDelay - manager.updateTime);
+                subject.tickleDelay = Math.max(0, subject.tickleDelay - GameManager.updateTime);
 
-                manager.updateImage($card, subject);
+                GameManager.updateImage($card, subject);
             });
         }, this.updateTime);
     };
 
-    manager.setup = function() {
-        this.setupSubjects();
-        this.setupInterval();
+    static setup() {
+        GameManager.setupSubjects();
+        GameManager.setupRooms();
+        GameManager.setupUpdate();
     }
 
-    manager.initialize = function() {
-        manager.load();
+    static initialize() {
+        GameManager.load();
 
         setInterval(function() {
-            manager.autosave();
-        }, manager.autosaveTime);
+            GameManager.autoSave();
+        }, GameManager.autoSaveTime);
 
-        $("#chkAutosave").click(function() {
-            if (game.data) {
-                game.data.autosave = $(this).is(":checked");
+        $("#chkAutoSave").click(function() {
+            if (Storage.data) {
+                Storage.data.autoSave = $(this).is(":checked");
             }
         });
 
         $("#btnSave").click(function() {
-            manager.save();
+            GameManager.save();
         });
 
         $(window).on("beforeunload", function() {
-            manager.autosave();
+            GameManager.autoSave();
         });
     };
 
-    manager.viewSubject = function(id) {
+    static viewSubject(id) {
         id = Number(id);
 
-        var data = game.data;
+        var data = Storage.data;
         if (!data) {
             return;
         }
@@ -276,6 +282,7 @@
         $modal.findByField(Fields.ID).text(subject.id);
         $modal.findByField(Fields.NAME).text(subject.name);
         $modal.findByField(Fields.SPECIES).text(Util.capitalize(subject.species));
+        $modal.findByField(Fields.ROLE).text(Util.capitalize(subject.role));
 
         var buyUpgrade = function(stat) {
             var value = 0;
@@ -290,7 +297,7 @@
             }
 
             var upgrade = Database.getStatUpgrade(stat, value);
-            game.data.laffs.current = Math.max(0, game.data.laffs.current - upgrade.cost);
+            Storage.data.laffs.current = Math.max(0, Storage.data.laffs.current - upgrade.cost);
             if (stat.indexOf(".") > -1) {
                 var aux = stat.split(".");
                 var stat1 = aux[0];
@@ -340,7 +347,7 @@
 
                 $btn.attr("data-cost", upgrade.cost);
 
-                if (upgrade.cost > game.data.laffs.current) {
+                if (upgrade.cost > Storage.data.laffs.current) {
                     $btn.addClass("disabled");
                 }
                 else {
@@ -374,8 +381,4 @@
 
         $modal.modal("show");
     };
-
-    $(function() {
-        manager.initialize();
-    });
-})();
+}

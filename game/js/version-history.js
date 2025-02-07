@@ -1,5 +1,17 @@
 ﻿class VersionHistory {
     static history = [
+        new Version("v0.2.0.0-dev", "2025-02-07", [
+            "Migrated game-manager.js to class notation",
+            "Made changes to the subjects and rooms dropdownlists to actually pull from the save data",
+            "Changed some terms, like job is now role",
+            "Now showing the subject role upon viewing stats",
+            "Fixed a bug with Util.capitalize returning undefined",
+            "Changed script loading order",
+            "Renamed game.js to index.js",
+            "All variables are now within their own respective classes",
+            "TODO: rethink stat purchases/upgrades",
+            "TODO: rethink reaction images (endurance thresholds vs stamina thresholds)"
+        ]),
         new Version("v0.1.0.13-dev", "2025-02-06", [
             "Migrating database.js to class notation",
             "TODO: break a few more objets from POJOs to classes, maybe"

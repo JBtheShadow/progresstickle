@@ -1,8 +1,14 @@
 class Storage {
     static key = "data";
+    static data = {};
 
     static useLocalStorage() {
         return typeof localStorage !== "undefined";
+    }
+
+    static initialize() {
+        Storage.data = Database.initializeGameData();
+        Storage.save();
     }
 
     static load() {
@@ -30,7 +36,7 @@ class Storage {
 
         var base64 = safeBase64.replace(/#/g, "=");
         var sData = atob(base64);
-        return JSON.parse(sData);
+        Storage.data = Database.normalizeGameData(JSON.parse(sData));
     }
 
     static loadFromStorage(key) {
@@ -58,8 +64,8 @@ class Storage {
         }
     }
 
-    static save(data) {
-        var sData = JSON.stringify(data);
+    static save() {
+        var sData = JSON.stringify(Storage.data);
         var base64 = btoa(sData);
         var safeBase64 = base64.replace(/=/g, "#");
 
@@ -88,6 +94,7 @@ class Storage {
     }
 
     static delete() {
+        Storage.data = {};
         if (Storage.useLocalStorage()) {
             Storage.deleteFromStorage(Storage.key);
         }

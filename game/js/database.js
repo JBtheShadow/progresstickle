@@ -11,7 +11,7 @@ class Database {
         ]
     };
 
-    static defaultDemonling(id, name, roomId) {
+    static defaultDemonling(id, name, role, nature) {
         return {
             id: id,
             name: name,
@@ -28,17 +28,25 @@ class Database {
             },
             laffs: 1,
             power: 0.01,
-            job: Jobs.LEE,
-            nature: Natures.NEUTRAL,
-            room: roomId
+            role: role,
+            nature: nature
         };
     }
 
-    static defaultRoom(id) {
-        return {
+    static defaultRoom(id, type, subjectGroups) {
+        var room = {
             id: id,
-            name: `Room #${id}`
+            name: `Room #${id}`,
+            type: type,
+            subjects: []
         };
+        for (var group of subjectGroups) {
+            room.subjects.push({
+                lee: group[0],
+                lers: group[1]
+            });
+        }
+        return room;
     }
 
     static startingLaffs() {
@@ -54,10 +62,10 @@ class Database {
         return {
             startTime: new Date().getTime(),
             lastSaveTime: new Date().getTime(),
-            autosave: true,
+            autoSave: true,
             version: VersionHistory.latest,
-            subjects: [Database.defaultDemonling(1, "David", 1)],
-            rooms: [Database.defaultRoom(1)],
+            subjects: [Database.defaultDemonling(1, "David", Roles.LEE, Natures.NEUTRAL)],
+            rooms: [Database.defaultRoom(1, RoomTypes.BASIC, [[1, []]])],
             laffs: Database.startingLaffs()
         };
     }
@@ -73,14 +81,31 @@ class Database {
         if (typeof data.lastSaveTime === "undefined") {
             data.lastSaveTime = new Date().getTime();
         }
-        if (typeof data.autosave === "undefined") {
-            data.autosave = true;
+        if (typeof data.autosave !== "undefined") {
+            data.autoSave = !!data.autosave;
+            delete data.autosave;
         }
+        if (typeof data.autoSave === "undefined") {
+            data.autoSave = true;
+        }
+
+        if (typeof data.rooms === "undefined") {
+            data.rooms = [];
+        }
+        if (!data.rooms || !data.rooms.length) {
+            data.rooms.push(Database.defaultRoom(1, RoomTypes.BASIC, [[1, []]]));
+        }
+        $(data.rooms).each(function(i, el) {
+            if (typeof el.type === "undefined") {
+                el.type = RoomTypes.BASIC;
+            }
+        });
+
         if (typeof data.subjects === "undefined") {
             data.subjects = [];
         }
         if (!data.subjects || !data.subjects.length) {
-            data.subjects.push(Database.defaultDemonling(1, "David", 1));
+            data.subjects.push(Database.defaultDemonling(1, "David", Roles.LEE, Natures.NEUTRAL));
         }
         $(data.subjects).each(function(i, el) {
             if (typeof el.species === "string") {
@@ -97,14 +122,28 @@ class Database {
             if (typeof el.power === "undefined") {
                 el.power = 0.01;
             }
+            if (typeof el.job !== "undefined") {
+                el.role = el.job;
+                delete el.job;
+            }
+            if (typeof el.role === "undefined") {
+                el.role = Roles.UNASSIGNED;
+            }
+            if (typeof el.roomId !== "undefined") {
+                if (el.role == Roles.LEE) {
+                    var room = data.rooms.filter(x => x.id == el.roomId)[0];
+                    if (room) {
+                        var group = room.subjects.filter(x => x.lee == el.id)[0];
+                        if (!group) {
+                            room.subjects.push({lee: subject.id, lers: []});
+                        }
+                    }
+                }
+                
+                delete el.roomId;
+            }
         });
 
-        if (typeof data.rooms === "undefined") {
-            data.rooms = [];
-        }
-        if (!data.rooms || !data.rooms.length) {
-            data.rooms.push(Database.defaultRoom(1));
-        }
         if (typeof data.laffs === "undefined") {
             data.laffs = Database.startingLaffs();
         }

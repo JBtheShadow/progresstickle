@@ -3,6 +3,7 @@ const Fields = {
     NAME: "name",
     PROFILE: "profile",
     SPECIES: "species",
+    ROLE: "role",
     ENDURANCE: "endurance",
     STAMINA: "stamina",
     MAX: "max",
@@ -62,7 +63,12 @@ const Natures = {
     NEUTRAL: "neutral"
 }
 
-const Jobs = {
+const Roles = {
+    UNASSIGNED: "unassigned",
     LEE: "lee",
     LER: "ler"
+}
+
+const RoomTypes = {
+    BASIC: "basic"
 }

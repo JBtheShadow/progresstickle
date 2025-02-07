@@ -30,8 +30,8 @@
                     </button>
                     <div class="dropdown-menu dropdown-menu-right" style="max-width: 200px; font-size: smaller;">
                         <label class="dropdown-item">
-                            <input type="checkbox" id="chkAutosave" checked="checked" />
-                            Enable autosave
+                            <input type="checkbox" id="chkAutoSave" checked="checked" />
+                            Enable auto save
                         </label>                            
                         <a class="dropdown-item disabled">
                             <label id="lastSaved"></label>
@@ -59,7 +59,7 @@
                 Version history
             </button>
 
-            <button type="button" class="btn btn-primary" onclick="game.gameManager.start();">
+            <button type="button" class="btn btn-primary" onclick="GameManager.start();">
                 Start
             </button>
         </div>
@@ -79,10 +79,7 @@
                             Hire new for X laffs
                         </a>
                         <hr>
-                        <div style="max-height: 100px; overflow-y: auto;">                            
-                            <a class="dropdown-item" onclick="game.gameManager.viewSubject(0);">
-                                #0: David
-                            </a>
+                        <div id="ddlSubjects" style="max-height: 100px; overflow-y: auto;">                            
                         </div>
                     </div>
                 </div>
@@ -95,10 +92,7 @@
                             Build new for X laffs
                         </a>
                         <hr>
-                        <div style="max-height: 100px; overflow-y: auto;">                            
-                            <a class="dropdown-item" data-target="#roomInfoModal" data-toggle="modal">
-                                #0: David
-                            </a>
+                        <div id="ddlRooms" style="max-height: 100px; overflow-y: auto;">                            
                         </div>
                     </div>
                 </div>
@@ -122,7 +116,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                        <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="game.gameManager.doOver();">Confirm</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="GameManager.doOver();">Confirm</button>
                     </div>
                 </div>
             </div>
@@ -166,6 +160,9 @@
                         </div>
                         <div>
                             <b>Species:</b> <span data-field="species"></span>
+                        </div>
+                        <div>
+                            <b>Role:</b> <span data-field="role"></span>
                         </div>
                         <div>
                             <b>Endurance:</b> <span data-field="endurance.max"></span>
@@ -234,7 +231,7 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="roomInfoModalLabel">Room #0: used for David</h5>
+                        <h5 class="modal-title" id="roomInfoModalLabel">Room #1: used for David</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -308,12 +305,12 @@
     <script src="./libs/popper/popper.min.js"></script>
     <script src="./libs/bootstrap/bootstrap.min.js"></script>
     <script src="./js/enums.js"></script>
-    <script src="./js/game.js"></script>
     <script src="./js/util.js"></script>
     <script src="./js/version.js"></script>
     <script src="./js/version-history.js"></script>
     <script src="./js/database.js"></script>
     <script src="./js/storage.js"></script>
     <script src="./js/game-manager.js"></script>
+    <script src="./js/index.js"></script>
 </body>
 </html>
