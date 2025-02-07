@@ -151,9 +151,6 @@ class GameManager {
             $("<a/>").addClass("dropdown-item").text(`#${subject.id}: ${subject.name}`)
                 .click(_ => GameManager.viewSubject(subject.id)).appendTo($ddlSubjects);
 
-            // subject.state = TickledStates.IDLE;
-            // subject.tickleDelay = 0;
-
             GameManager.setupSubjectCard($card, subject);
         }
     };

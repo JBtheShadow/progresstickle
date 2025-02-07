@@ -67,6 +67,8 @@ class Database {
                 laffs: 0,
                 power: 0
             },
+            state: TickledStates.IDLE,
+            tickleDelay: 0,
             role: role,
             nature: nature
         };
@@ -205,6 +207,14 @@ class Database {
                 }
 
                 delete el.roomId;
+            }
+
+            if (typeof el.state === "undefined") {
+                el.state = TickledStates.IDLE;
+            }
+
+            if (typeof el.tickleDelay === "undefined") {
+                el.tickleDelay = 0;
             }
         });
 
