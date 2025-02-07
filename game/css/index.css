@@ -27,6 +27,10 @@ table th {
     display: none;
 }
 
+.btn-multiplier {
+    margin: 0 3px;
+}
+
 .progress-bar {
     -webkit-transition: none !important;
     transition: none !important;

@@ -20,10 +20,10 @@ class Util {
             num = num / 1000;
         }
 
-        var sNum = num.toString().split(".");
+        var sNum = num.toFixed(2).split(".");
         var integer = sNum[0];
-        var decimal = ("." + ((sNum[1] || "")[0] || "0")).replace(".0", "");
-        return integer + (Util.units[ind] ? decimal + Util.units[ind] : "");
+        var decimal = `.${sNum[1]}`.replace(/0+$/g, "").replace(/\.$/g, "");
+        return `${integer}${decimal}${Util.units[ind] || ""}`;
     }
 
     /**

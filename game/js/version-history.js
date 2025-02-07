@@ -1,5 +1,12 @@
 ﻿class VersionHistory {
     static history = [
+        new Version("v0.3.0.0-dev", "2025-02-07", [
+            "Reworked on upgrade costs to follow a geometric curve",
+            "Changed upgrade logic to consider set upgrade amounts rather than fixing the new amount to 1.7x the previous one",
+            "Reworked stats to pull from database + upgrades instead of directly from raw stats on the subjects",
+            "Fixed an exploit when refreshing the page while a subject was fainted removed the fainted status",
+            "Changed Util.prettifyNumber to allow printing with decimals, too"
+        ]),
         new Version("v0.2.0.0-dev", "2025-02-07", [
             "Migrated game-manager.js to class notation",
             "Made changes to the subjects and rooms dropdownlists to actually pull from the save data",
