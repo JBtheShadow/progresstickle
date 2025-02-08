@@ -1,5 +1,8 @@
 ﻿class VersionHistory {
     static history = [
+        new Version("v0.3.2", "2025-02-07", [
+            "Fixed a bug (hopefully!) with the max purchase setting having some problems with internal rounding errors"
+        ]),
         new Version("v0.3.1", "2025-02-07", [
             "Fixed a deeper bug discovered by the earlier exploit fix where subjects didn't start with a state set, messing with the tickling"
         ]),

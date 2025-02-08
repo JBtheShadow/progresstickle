@@ -114,6 +114,7 @@ class GameManager {
                 var laffs = Storage.data.laffs;
                 var earned = (subjectLaffs + laffs.modifier) * laffs.factor * multiplier;
                 Storage.data.laffs.current += earned;
+                Storage.data.laffs.current = Number(Storage.data.laffs.current.toFixed(2));
             }
 
             if (subject.stamina <= 0) {

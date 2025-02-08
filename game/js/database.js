@@ -369,10 +369,20 @@ class Database {
         // (money + spent) * (growth - 1) / base = growth^amount - 1
         // (money + spent) * (growth - 1) / base + 1 = growth^amount
         // log((money + spent) * (growth - 1) / base + 1) / log(growth) = amount
-        // This seems to get an amount with cost immediately greater than what funds the player has so I'm deducting 1 from the final result
 
-        var amount = Math.log((Storage.data.laffs.current + spent) * (Database.costs.growth - 1) / upgradeStats.base + 1) / Math.log(Database.costs.growth) - 1;
+        // This seems to get an amount with cost immediately greater than what funds the player has, but not always, so
+        // until I figure out a better way I'm just gonna double check it here
 
-        return amount > 1 ? Math.floor(amount) : 1;
+        var amount = Math.round(Math.log((Storage.data.laffs.current + spent) * (Database.costs.growth - 1) / upgradeStats.base + 1) / Math.log(Database.costs.growth));
+        if (amount > 1) {
+            do {
+                var cost = Database.getStatUpgrade(stat, currUpgrades, amount);
+                if (cost.cost > Storage.data.laffs.current)
+                    amount--;
+
+            } while (amount > 1 && cost > Storage.data.laffs.current);
+        }
+
+        return Math.max(1, amount);
     }
 }
