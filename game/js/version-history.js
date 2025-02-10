@@ -1,5 +1,10 @@
 ﻿class VersionHistory {
     static history = [
+        new Version("v0.4.0", "2025-02-10", [
+            "Seems some browsers will save resources and unload an unfocused tab or otherwise not call recurring methods setup with setInterval, at least when the interval is too low",
+            "This creates a problem for an idle game if you intend to leave it running in the background, as is expected of an idle game",
+            "So I added some logic to check the timestamp of the last update, compare with the current one and then as soon as an update happens the game *should*, hopefully, catch up with however many missed updates there were"
+        ]),
         new Version("v0.3.2", "2025-02-07", [
             "Fixed a bug (hopefully!) with the max purchase setting having some problems with internal rounding errors"
         ]),

@@ -2,11 +2,13 @@ class GameManager {
     static autoSaveTime = 1000 * 60 * 5;
     static updateTime = 50;
     static updateHandle = null;
+    static lastUpdateTime = null;
 
     static clearUpdateHandle() {
         if (GameManager.updateHandle) {
             clearInterval(GameManager.updateHandle);
             GameManager.updateHandle = null;
+            GameManager.lastUpdateTime = null;
         }
     }
 
@@ -165,7 +167,13 @@ class GameManager {
     }
 
     static setupUpdate() {
+        GameManager.lastUpdateTime = new Date().getTime();
         GameManager.updateHandle = setInterval(function() {
+
+            var currentUpdateTime = new Date().getTime();
+            var updateCount = Math.round((currentUpdateTime - GameManager.lastUpdateTime) / GameManager.updateTime);
+            GameManager.lastUpdateTime = currentUpdateTime;
+
             $("#fundsText").each(function(i, el) {
                 var $text = $(el);
                 var current = Storage.data.laffs.current;
@@ -199,27 +207,6 @@ class GameManager {
                     return;
                 }
 
-                var speciesStats = Database.stats[subject.species];
-                var staminaMax = speciesStats.stamina.max + subject.upgrades.stamina.max * Database.costs.stamina.max.unit;
-                var staminaRegen = speciesStats.stamina.regen + subject.upgrades.stamina.regen * Database.costs.stamina.regen.unit;
-                var enduranceMax = speciesStats.endurance.max;
-                var enduranceRegen = speciesStats.endurance.regen;
-
-                if (subject.state != TickledStates.TICKLED && subject.autostate != TickledStates.TICKLED) {
-                    if (subject.stamina < staminaMax) {
-                        subject.stamina = Math.min(staminaMax, subject.stamina + staminaRegen);
-                    } else {
-                        subject.endurance = Math.min(enduranceMax, subject.endurance + enduranceRegen);
-                    }
-
-                    if (subject.state == TickledStates.FAINTED && subject.stamina == staminaMax && subject.endurance == enduranceMax) {
-                        subject.state = TickledStates.IDLE;
-                    }
-                }
-
-                var $enduranceBar = $card.findByField(Fields.ENDURANCE).find(".progress-bar");
-                var $staminaBar = $card.findByField(Fields.STAMINA).find(".progress-bar");
-
                 var updateBar = function($bar, current, max) {
                     $bar.attr({
                         "aria-valuenow": current,
@@ -228,12 +215,36 @@ class GameManager {
                     });
                     $bar.css("width", (current / max * 100).toFixed(3) + "%");
                 };
-                updateBar($enduranceBar, subject.endurance, enduranceMax);
-                updateBar($staminaBar, subject.stamina, staminaMax);
 
-                subject.tickleDelay = Math.max(0, subject.tickleDelay - GameManager.updateTime);
+                var speciesStats = Database.stats[subject.species];
+                var staminaMax = speciesStats.stamina.max + subject.upgrades.stamina.max * Database.costs.stamina.max.unit;
+                var staminaRegen = speciesStats.stamina.regen + subject.upgrades.stamina.regen * Database.costs.stamina.regen.unit;
+                var enduranceMax = speciesStats.endurance.max;
+                var enduranceRegen = speciesStats.endurance.regen;
 
-                GameManager.updateImage($card, subject);
+                var $enduranceBar = $card.findByField(Fields.ENDURANCE).find(".progress-bar");
+                var $staminaBar = $card.findByField(Fields.STAMINA).find(".progress-bar");
+
+                for (var i = 0; i < updateCount; i++) {
+                    if (subject.state != TickledStates.TICKLED && subject.autostate != TickledStates.TICKLED) {
+                        if (subject.stamina < staminaMax) {
+                            subject.stamina = Math.min(staminaMax, subject.stamina + staminaRegen);
+                        } else {
+                            subject.endurance = Math.min(enduranceMax, subject.endurance + enduranceRegen);
+                        }
+    
+                        if (subject.state == TickledStates.FAINTED && subject.stamina == staminaMax && subject.endurance == enduranceMax) {
+                            subject.state = TickledStates.IDLE;
+                        }
+                    }
+    
+                    updateBar($enduranceBar, subject.endurance, enduranceMax);
+                    updateBar($staminaBar, subject.stamina, staminaMax);
+    
+                    subject.tickleDelay = Math.max(0, subject.tickleDelay - GameManager.updateTime);
+    
+                    GameManager.updateImage($card, subject);
+                }
             });
         }, this.updateTime);
     };
