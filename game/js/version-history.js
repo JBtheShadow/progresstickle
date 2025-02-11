@@ -1,5 +1,8 @@
 ﻿class VersionHistory {
     static history = [
+        new Version("v0.5.0", "2025-02-11", [
+            "You can rename the starter Demonling now!"
+        ]),
         new Version("v0.4.0", "2025-02-10", [
             "Seems some browsers will save resources and unload an unfocused tab or otherwise not call recurring methods setup with setInterval, at least when the interval is too low",
             "This creates a problem for an idle game if you intend to leave it running in the background, as is expected of an idle game",

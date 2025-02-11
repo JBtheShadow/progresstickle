@@ -144,6 +144,7 @@ class GameManager {
         var $ddlSubjects = $("#ddlSubjects").empty();
         for (var subject of Storage.data.subjects) {
             var $card = $template.clone();
+            $card.attr("id", "");
             $card.attr("data-subject", subject.id);
             $card.css("display", "");
             $card.findByField(Fields.NAME).text(subject.name);
@@ -151,7 +152,7 @@ class GameManager {
 
             $destination.append($card);
 
-            $("<a/>").addClass("dropdown-item").text(`#${subject.id}: ${subject.name}`)
+            $("<a/>").addClass("dropdown-item").attr("data-subject", subject.id).text(`#${subject.id}: ${subject.name}`)
                 .click(_ => GameManager.viewSubject(subject.id)).appendTo($ddlSubjects);
 
             GameManager.setupSubjectCard($card, subject);
@@ -299,6 +300,13 @@ class GameManager {
         $modal.findByField(Fields.NAME).text(subject.name);
         $modal.findByField(Fields.SPECIES).text(Util.capitalize(subject.species));
         $modal.findByField(Fields.ROLE).text(Util.capitalize(subject.role));
+
+        $modal.find(".btn-edit").off("click").click(function() {
+            subject.name = prompt("Choose a name", subject.name) || `Subject #${subject.id}`;
+            $(`#testSubjects [data-subject='${subject.id}']`).findByField(Fields.NAME).text(subject.name);
+            $(`.dropdown-item[data-subject='${subject.id}']`).text(`#${subject.id}: ${subject.name}`);
+            GameManager.viewSubject(id);
+        });
 
         var buyUpgrade = function(stat, amount) {
             var currUpgrades = 0;

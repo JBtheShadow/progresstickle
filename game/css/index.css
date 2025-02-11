@@ -31,6 +31,11 @@ table th {
     margin: 0 3px;
 }
 
+.btn-edit {
+    font-size: 12px;
+    padding: 0 3px;
+}
+
 .progress-bar {
     -webkit-transition: none !important;
     transition: none !important;
