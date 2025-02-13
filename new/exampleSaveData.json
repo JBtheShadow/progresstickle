@@ -1,0 +1,188 @@
+{
+    "startTime": 1739458703322,
+    "lastSaveTime": 1739458703322,
+    "version": "1.0.0",
+    "rooms": [
+        {
+            "id": 1,
+            "name": "Basic room #1",
+            "levels": {
+                "size": 1,
+                "maxEndurance": 0,
+                "enduranceRegen": 0,
+                "maxStamina": 0,
+                "staminaRegen": 0,
+                "laffGeneration": 0,
+                "tickleStrength": 0
+            }
+        },
+        {
+            "id": 2,
+            "name": "BIG room",
+            "levels": {
+                "size": 10,
+                "maxEndurance": 0,
+                "enduranceRegen": 0,
+                "maxStamina": 0,
+                "staminaRegen": 0,
+                "laffGeneration": 0,
+                "tickleStrength": 0
+            }
+        }
+    ],
+    "subjects": [
+        {
+            "id": 1,
+            "name": "David",
+            "species": "demonling",
+            "nature": "neutral",
+            "job": {
+                "room": 1,
+                "role": "lee",
+                "subject": null,
+                "tools": []
+            },
+            "stats": {
+                "endurance": 5,
+                "stamina": 20
+            },
+            "levels": {
+                "size": 1,
+                "maxEndurance": 0,
+                "enduranceRegen": 0,
+                "maxStamina": 0,
+                "staminaRegen": 0,
+                "laffGeneration": 0,
+                "tickleStrength": 0
+            }
+        },
+        {
+            "id": 2,
+            "name": "Alan",
+            "species": "nvoii",
+            "nature": "shy",
+            "job": {
+                "room": 1,
+                "role": "ler",
+                "subject": 1,
+                "tools": []
+            },
+            "stats": {
+                "endurance": 5,
+                "stamina": 20
+            },
+            "levels": {
+                "size": 1,
+                "maxEndurance": 0,
+                "enduranceRegen": 0,
+                "maxStamina": 0,
+                "staminaRegen": 0,
+                "laffGeneration": 0,
+                "tickleStrength": 0
+            }
+        },
+        {
+            "id": 3,
+            "name": "Arthur",
+            "species": "stonauto",
+            "nature": "stoic",
+            "job": {
+                "room": 2,
+                "role": "lee",
+                "subject": null,
+                "tools": []
+            },
+            "stats": {
+                "endurance": 5,
+                "stamina": 20
+            },
+            "levels": {
+                "size": 1,
+                "maxEndurance": 0,
+                "enduranceRegen": 0,
+                "maxStamina": 0,
+                "staminaRegen": 0,
+                "laffGeneration": 0,
+                "tickleStrength": 0
+            }
+        },
+        {
+            "id": 4,
+            "name": "Kevin",
+            "species": "bundelion",
+            "nature": "sassy",
+            "job": {
+                "room": 2,
+                "role": "ler",
+                "subject": 3,
+                "tools": []
+            },
+            "stats": {
+                "endurance": 5,
+                "stamina": 20
+            },
+            "levels": {
+                "size": 1,
+                "maxEndurance": 0,
+                "enduranceRegen": 0,
+                "maxStamina": 0,
+                "staminaRegen": 0,
+                "laffGeneration": 0,
+                "tickleStrength": 0
+            }
+        },
+        {
+            "id": 5,
+            "name": "Pietro",
+            "species": "fufflebug",
+            "nature": "cheerful",
+            "job": {
+                "room": null,
+                "role": null,
+                "subject": null,
+                "tools": []
+            },
+            "stats": {
+                "endurance": 5,
+                "stamina": 20
+            },
+            "levels": {
+                "size": 1,
+                "maxEndurance": 0,
+                "enduranceRegen": 0,
+                "maxStamina": 0,
+                "staminaRegen": 0,
+                "laffGeneration": 0,
+                "tickleStrength": 0
+            }
+        }
+    ],
+    "upgrades": {
+        "levels": {
+            "size": 0,
+            "maxEndurance": 0,
+            "enduranceRegen": 0,
+            "maxStamina": 0,
+            "staminaRegen": 0,
+            "laffGeneration": 0,
+            "tickleStrength": 0
+        },
+        "tools": {
+            "null": 1,
+            "feather": 0,
+            "hairbrush": 0,
+            "petgloves": 0,
+            "metalclaws": 0,
+            "lotion": 0,
+            "powder": 0
+        }
+    },
+    "currencies": {
+        "laffs": 0,
+        "mana": 0,
+        "glow": 0
+    },
+    "settings": {
+        "autoSave": true
+    }
+}

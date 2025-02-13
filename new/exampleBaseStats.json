@@ -1,0 +1,67 @@
+{
+    "stats": {
+        "size": [1,2,3,4,5,6,7,8,9,10],
+        "maxEndurance": [5,10,25,50,100,250,500,1000,2500,5000],
+        "enduranceRegen": [1,2,3,4,5,6,7,8,9,10],
+        "maxStamina": [10,25,50,100,250,500,1000,2500,5000,10000],
+        "staminaRegen": 1,
+        "laffGeneration": 1,
+        "tickleStrength": 2
+    },
+    "costs": {
+        "size": 1,
+        "maxEndurance": 10,
+        "enduranceRegen": 1,
+        "maxStamina": 20,
+        "staminaRegen": 1,
+        "laffGeneration": 1,
+        "tickleStrength": 2
+    },
+    "species": {
+        "demonling": {
+            "size": 1,
+            "maxEndurance": 10,
+            "enduranceRegen": 1,
+            "maxStamina": 20,
+            "staminaRegen": 1,
+            "laffGeneration": 1,
+            "tickleStrength": 2
+        },
+        "fufflebug": {
+            "size": 1,
+            "maxEndurance": 5,
+            "enduranceRegen": 1,
+            "maxStamina": 30,
+            "staminaRegen": 5,
+            "laffGeneration": 2,
+            "tickleStrength": 1
+        },
+        "bundelion": {
+            "size": 1,
+            "maxEndurance": 5,
+            "enduranceRegen": 1,
+            "maxStamina": 50,
+            "staminaRegen": 5,
+            "laffGeneration": 2,
+            "tickleStrength": 2
+        },
+        "nvoii": {
+            "size": 1,
+            "maxEndurance": 5,
+            "enduranceRegen": 1,
+            "maxStamina": 20,
+            "staminaRegen": 1,
+            "laffGeneration": 3,
+            "tickleStrength": 1
+        },
+        "stonauto": {
+            "size": 1,
+            "maxEndurance": 50,
+            "enduranceRegen": 5,
+            "maxStamina": 100,
+            "staminaRegen": 5,
+            "laffGeneration": 3,
+            "tickleStrength": 1
+        }
+    }
+}

@@ -1,0 +1,126 @@
+@font-face {
+    font-family: Atma;
+    src: url("../fonts/Atma/Atma-Regular.ttf");
+}
+
+html, body {
+    font-family: Atma;
+    font-size: 20px;
+    padding: 0;
+    margin: 0;
+    height: 100%;
+}
+
+:root {
+    --dark: rgb(20, 20, 50);
+    --semidark: rgb(50, 50, 100);
+    --light: rgb(240, 240, 240);
+    --gray: rgb(100,100,140);
+    --highlight: rgb(0, 255, 255);
+    --danger: rgb(255, 100, 0);
+    --dangerhighlight: rgb(255, 200, 100);
+}
+
+.toplevel {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.main {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+}
+
+.main > .menu {
+    flex: 1;
+    background: var(--dark);
+    color: var(--light);
+    padding: 0.5rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.main > .content {
+    flex: 5;
+    background: var(--light);
+    color: var(--dark);
+    padding: 0.5rem;
+}
+
+.templates {
+    display: none;
+}
+
+.menu > .header {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    gap: 0.5rem;
+}
+
+.menu > .header > .title {
+    font-size: 150%;
+}
+.menu > .header > .version {
+    font-size: 75%;
+    color: var(--gray);
+}
+
+.menu > .separator {
+    border: 1px solid var(--gray);
+    margin: 0.5rem 0;
+}
+
+.menu .item {
+    text-decoration: none;
+    color: var(--light);
+}
+.menu .item:hover,
+.menu .item:focus {
+    color: var(--highlight);
+}
+
+.menu .item.active {
+    background: var(--semidark);
+}
+
+.menu .item.danger {
+    color: var(--danger);
+}
+.menu .item.danger:hover,
+.menu .item.danger:focus {
+    color: var(--dangerhighlight);
+}
+
+@media (max-width: 1399px) {
+    .main > .menu {
+        flex: 2;
+    }
+
+    .main > .content {
+        flex: 6;
+    }
+}
+
+@media (max-width: 899px) {
+    .main {
+        flex-direction: column;
+    }
+
+    .main > .menu {
+        flex: 0;
+        display: initial;
+    }
+
+    .menu > .separator {
+        display: inline-block;
+        height: 0.5rem;
+        margin: 0 0.5rem;
+    }
+
+    .main > .content {
+        flex: auto;
+    }
+}
