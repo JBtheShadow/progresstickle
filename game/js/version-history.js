@@ -1,5 +1,10 @@
 ﻿class VersionHistory {
     static history = [
+        new Version("v0.5.1", "2025-02-19", [
+            "Nothing was changed, just a bit of news",
+            "The next version will likely not be compatible with the current save data because I want to make several changes and trying to match them is kiiiinda a lot of trouble",
+            "Planned changes include more species, ways to unlock and upgrade them and more resources/currencies other than laffs"
+        ]),
         new Version("v0.5.0", "2025-02-11", [
             "You can rename the starter Demonling now!"
         ]),
