@@ -3,7 +3,8 @@
         new Version("v0.5.1", "2025-02-19", [
             "Nothing was changed, just a bit of news",
             "The next version will likely not be compatible with the current save data because I want to make several changes and trying to match them is kiiiinda a lot of trouble",
-            "Planned changes include more species, ways to unlock and upgrade them and more resources/currencies other than laffs"
+            "Planned changes include more species, ways to unlock and upgrade them and more resources/currencies other than laffs",
+            "Check https://github.com/JBtheShadow/progresstickle/blob/master/new/ideas.md and https://github.com/JBtheShadow/progresstickle/blob/master/new/ideas_expanded.md for more details"
         ]),
         new Version("v0.5.0", "2025-02-11", [
             "You can rename the starter Demonling now!"
