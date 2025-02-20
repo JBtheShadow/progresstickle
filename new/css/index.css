@@ -1,10 +1,10 @@
 @font-face {
-    font-family: Atma;
+    font-family: Atma, sans-serif;
     src: url("../fonts/Atma/Atma-Regular.ttf");
 }
 
 html, body {
-    font-family: Atma;
+    font-family: Atma, sans-serif;
     font-size: 20px;
     padding: 0;
     margin: 0;
