@@ -1,0 +1,550 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Tests</title>
+        <style>
+            @font-face {
+                font-family: Atma;
+                src: url("../new/fonts/Atma/Atma-Regular.ttf");
+            }
+
+            html, body {
+                font-family: Atma;
+                font-size: 16px;
+                padding: 0;
+                margin: 0;
+                height: 100%;
+            }
+
+            * {
+                transition: background-color 0.25s, border-color 0.25s, color 0.25s, width 0.25s;
+            }
+
+            :root {
+                --text-dark: rgb(50,50,50);
+                --text-light: rgb(250,250,250);
+
+                --nav-bg: rgb(20, 20, 50);
+                --nav-bg-active: rgb(50, 50, 100);
+                
+                --nav-text-highlight: rgb(150, 150, 200);
+
+                --main-bg: rgb(250, 250, 250);
+
+                --btn-bg: rgb(235,235,235);
+                --btn-border: rgb(215,215,215);
+                --btn-bg-focus: rgb(255,255,255);
+                --btn-border-focus: rgb(235,235,235);
+                --btn-bg-active: rgb(245,245,245);
+                --btn-border-active: rgb(225,225,225);
+
+                --btn-info-bg: rgb(0,140,200);
+                --btn-info-border: rgb(0,120,180);
+                --btn-info-bg-focus: rgb(20,160,220);
+                --btn-info-border-focus: rgb(0,140,200);
+                --btn-info-bg-active: rgb(0,150,210);
+                --btn-info-border-active: rgb(0,130,190);
+
+                --btn-success-bg: rgb(0,200,140);
+                --btn-success-border: rgb(0,180,120);
+                --btn-success-bg-focus: rgb(20,220,160);
+                --btn-success-border-focus: rgb(0,200,140);
+                --btn-success-bg-active: rgb(0,210,150);
+                --btn-success-border-active: rgb(0,190,130);
+
+                --btn-warning-bg: rgb(220,200,0);
+                --btn-warning-border: rgb(200,180,0);
+                --btn-warning-bg-focus: rgb(240,220,0);
+                --btn-warning-border-focus: rgb(220,200,0);
+                --btn-warning-bg-active: rgb(230,210,0);
+                --btn-warning-border-active: rgb(210,190,0);
+
+                --btn-danger-bg: rgb(220,50,50);
+                --btn-danger-border: rgb(200,30,30);
+                --btn-danger-bg-focus: rgb(240,70,70);
+                --btn-danger-border-focus: rgb(220,50,50);
+                --btn-danger-bg-active: rgb(230,60,60);
+                --btn-danger-border-active: rgb(210,40,40);
+
+                --btn-special-bg: rgb(170,50,250);
+                --btn-special-border: rgb(150,30,230);
+                --btn-special-bg-focus: rgb(190,70,270);
+                --btn-special-border-focus: rgb(170,50,250);
+                --btn-special-bg-active: rgb(180,60,260);
+                --btn-special-border-active: rgb(160,40,240);
+            }
+
+            p {
+                margin-top: 0;
+                margin-bottom: 10px;
+            }
+
+            body > .top {
+                display: flex;
+                flex-direction: column;
+                height: 100%;
+            }
+
+            .top > .inner {
+                display: flex;
+                flex-direction: row;
+                height: 100%;
+            }
+
+            .inner > nav {
+                flex: 1;
+                background: var(--nav-bg);
+                color: var(--text-light);
+                padding: 0.5rem;
+                display: flex;
+                flex-direction: column;
+                font-size: 20px;
+            }
+
+            .inner > nav header {
+                font-size: 30px;
+            }
+            .inner > nav header [data-field="version"] {
+                font-size: 12px;
+                opacity: 50%;
+            }
+            .inner > nav ul {
+                list-style-type: none;
+                padding-left: 0;
+                padding-right: 0;
+            }
+            .inner > nav li {
+                padding-left: 10px;
+                padding-right: 10px;
+            }
+            .inner > nav li a {
+                text-decoration: none;
+                color: var(--text-light);
+            }
+            .inner > nav li a:hover,
+            .inner > nav li a:focus {
+                color: var(--nav-text-highlight);
+            }
+
+            .inner > nav li.active {
+                background: var(--nav-bg-active);
+            }
+
+            .inner > main {
+                flex: 5;
+                background: var(--main-bg);
+                color: var(--text-dark);
+                padding: 0.5rem;
+            }
+
+            @media (max-width: 1399px) {
+                .top > .inner > nav {
+                    flex: 2;
+                }
+
+                .top > .inner > main {
+                    flex: 6;
+                }
+            }
+
+            @media (max-width: 899px) {
+                .top > .inner {
+                    flex-direction: column;
+                }
+
+                .top > .inner > nav {
+                    flex: 0;
+                    display: initial;
+                }
+
+                .top > .inner > nav ul {
+                    display: inline-block;
+                }
+
+                .top > .inner > nav ul > li {
+                    display: inline-block;
+                }
+
+                .top > .inner > main {
+                    flex: auto;
+                }
+            }
+
+
+            button[type="button"] {
+                font-family: Atma;
+                font-size: 16px;
+                border-width: 1px;
+                border-style: solid;
+                border-radius: 10px;
+                padding: 5px 10px;
+                font-weight: bold;
+                cursor: pointer;
+                background: var(--btn-bg);
+                border-color: var(--btn-border);
+                color: var(--text-dark);
+            }
+            button[type="button"][disabled] {
+                cursor: default;
+                opacity: 0.5;
+            }
+
+            table {
+                border-collapse: collapse;
+            }
+
+            table tr td,
+            table tr th {
+                padding: 0 10px;
+            }
+
+            thead tr {
+                background: var(--btn-info-bg);
+                color: var(--text-light);
+            }
+
+            tfoot tr {
+                background: var(--btn-bg);
+            }
+            tfoot tr td {
+                padding: 3px;
+            }
+
+            table tr td:not(:last-child),
+            table tr th:not(:last-child) {
+                border-right: 1px solid lightgray;
+            }
+
+            tbody tr:nth-child(2n) {
+                background: var(--btn-bg-focus);
+            }
+
+            tfoot nav {
+                text-align: center;
+            }
+
+            tfoot nav button[type="button"] {
+                font-size: 15px;
+                padding: 0 8px;
+            }
+
+            tfoot nav button[type="button"].active {
+                background: var(--btn-bg-focus);
+                border-color: var(--btn-border-focus);
+            }
+
+            button[type="button"]:focus-visible {
+                outline: none;
+            }
+
+            button[type="button"]:hover:not([disabled]),
+            button[type="button"]:focus:not([disabled]) {
+                background: var(--btn-bg-focus);
+                border-color: var(--btn-border-focus);
+            }
+            
+            button[type="button"]:active:not([disabled]) {
+                background: var(--btn-bg-active);
+                border-color: var(--btn-border-active);
+            }
+
+            button[type="button"].info {
+                background: var(--btn-info-bg);
+                border-color: var(--btn-info-border);
+                color: var(--text-light);
+            }
+            button[type="button"].info:hover:not([disabled]),
+            button[type="button"].info:focus:not([disabled]) {
+                background: var(--btn-info-bg-focus);
+                border-color: var(--btn-info-border-focus);
+            }
+            
+            button[type="button"].info:active:not([disabled]) {
+                background: var(--btn-info-bg-active);
+                border-color: var(--btn-info-border-active);
+            }
+
+            button[type="button"].success {
+                background: var(--btn-success-bg);
+                border-color: var(--btn-success-border);
+                color: var(--text-light);
+            }
+            button[type="button"].success:hover:not([disabled]),
+            button[type="button"].success:focus:not([disabled]) {
+                background: var(--btn-success-bg-focus);
+                border-color: var(--btn-success-border-focus);
+            }
+            
+            button[type="button"].success:active:not([disabled]) {
+                background: var(--btn-success-bg-active);
+                border-color: var(--btn-success-border-active);
+            }
+
+            button[type="button"].warning {
+                background: var(--btn-warning-bg);
+                border-color: var(--btn-warning-border);
+                color: var(--text-light);
+            }
+            button[type="button"].warning:hover:not([disabled]),
+            button[type="button"].warning:focus:not([disabled]) {
+                background: var(--btn-warning-bg-focus);
+                border-color: var(--btn-warning-border-focus);
+            }
+            
+            button[type="button"].warning:active:not([disabled]) {
+                background: var(--btn-warning-bg-active);
+                border-color: var(--btn-warning-border-active);
+            }
+
+            button[type="button"].danger {
+                background: var(--btn-danger-bg);
+                border-color: var(--btn-danger-border);
+                color: var(--text-light);
+            }
+            button[type="button"].danger:hover:not([disabled]),
+            button[type="button"].danger:focus:not([disabled]) {
+                background: var(--btn-danger-bg-focus);
+                border-color: var(--btn-danger-border-focus);
+            }
+            
+            button[type="button"].danger:active:not([disabled]) {
+                background: var(--btn-danger-bg-active);
+                border-color: var(--btn-danger-border-active);
+            }
+
+            button[type="button"].special {
+                background: var(--btn-special-bg);
+                border-color: var(--btn-special-border);
+                color: var(--text-light);
+            }
+            button[type="button"].special:hover:not([disabled]),
+            button[type="button"].special:focus:not([disabled]) {
+                background: var(--btn-special-bg-focus);
+                border-color: var(--btn-special-border-focus);
+            }
+            
+            button[type="button"].special:active:not([disabled]) {
+                background: var(--btn-special-bg-active);
+                border-color: var(--btn-special-border-active);
+            }
+
+            .stat-bar {
+                width: 200px;
+            }
+
+            .stat-bar .outer {
+                height: 15px;
+                background: var(--btn-border);
+                border-radius: 10px;
+                overflow: hidden;
+            }
+
+            .stat-bar .inner {
+                height: 13px;
+                margin: 1px 0;
+            }
+            .stat-bar [data-field="counter"] {
+                text-align: center;
+            }
+
+            .stat-bar[data-stat="endurance"] .inner {
+                background-color: var(--btn-info-bg);
+            }
+            .stat-bar[data-stat="stamina"] .inner {
+                background-color: var(--btn-success-bg);
+            }
+            .stat-bar[data-stat="energy"] .inner {
+                background-color: var(--btn-warning-bg);
+            }
+            .stat-bar[data-stat="food"] .inner {
+                background-color: var(--btn-danger-bg);
+            }
+            .stat-bar[data-stat="special"] .inner {
+                background-color: var(--btn-special-bg);
+            }
+        </style>
+    </head>
+    <body>
+        <div class="top">
+            <div class="inner">
+                <nav>
+                    <section>
+                        <header>
+                            Progress Tickle <span data-field="version">v1.0.0</span>
+                        </header>
+                        <div>
+                            Funds: <span data-field="laffs">3.65M laffs</span>
+                        </div>
+                    </section>
+                    <section>
+                        <ul>
+                            <li class="active">
+                                <a href="javascript:;">Home</a>
+                            </li>
+                            <li class="">
+                                <a href="javascript:;">Subjects</a>
+                            </li>
+                            <li class="">
+                                <a href="javascript:;">Rooms</a>
+                            </li>
+                            <li class="">
+                                <a href="javascript:;">Player upgrades</a>
+                            </li>
+                            <li class="">
+                                <a href="javascript:;">Settings</a>
+                            </li>
+                        </ul>
+                        <ul>
+                            <li class="">
+                                <a href="javascript:;">About</a>
+                            </li>
+                            <li class="">
+                                <a href="javascript:;">Version history</a>
+                            </li>
+                        </ul>
+                    </section>
+                </nav>
+                <main>
+                    <h1>Testing components</h1>
+                    <p>Here's just a paragraph with some text that doesn't really matter other than trying to see how things would look here.</p>
+                    <h2>Testing buttons and colors</h2>
+                    <p>
+                        <button type="button">Default</button>
+                        <button class="info" type="button">Info</button>
+                        <button class="success" type="button">Success</button>
+                        <button class="warning" type="button">Warning</button>
+                        <button class="danger" type="button">Danger</button>
+                        <button class="special" type="button">Special</button>
+                    </p>
+                    <p>
+                        <button type="button" disabled>Default</button>
+                        <button class="info" type="button" disabled>Endurance</button>
+                        <button class="success" type="button" disabled>Stamina</button>
+                        <button class="warning" type="button" disabled>Energy</button>
+                        <button class="danger" type="button" disabled>Hunger</button>
+                        <button class="special" type="button" disabled>Special</button>
+                    </p>
+                    <h2>Testing table</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Header 1</th>
+                                <th>Header 2</th>
+                                <th>Header 3</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Item 1</td>
+                                <td>Some text</td>
+                                <td>Some other text</td>
+                            </tr>
+                            <tr>
+                                <td>Item 2</td>
+                                <td>Some text</td>
+                                <td>Some other text</td>
+                            </tr>
+                            <tr>
+                                <td>Item 3</td>
+                                <td>Some text</td>
+                                <td>Some other text</td>
+                            </tr>
+                            <tr>
+                                <td>Item 4</td>
+                                <td>Some text</td>
+                                <td>Some other text</td>
+                            </tr>
+                            <tr>
+                                <td>Item 5</td>
+                                <td>Some text</td>
+                                <td>Some other text</td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="3">
+                                    <nav>
+                                        <button type="button">&lt;&lt;</button>
+                                        <button type="button">&lt;</button>
+                                        <button type="button">1</button>
+                                        <button class="active" type="button">2</button>
+                                        <button type="button">3</button>
+                                        <button type="button">4</button>
+                                        <button type="button">5</button>
+                                        <button type="button">&gt;</button>
+                                        <button type="button">&gt;&gt;</button>
+                                    </nav>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                    <h2>Testing stat bars</h2>
+                    <div class="stat-bar" data-stat="endurance">
+                        <div data-field="counter">Endurance: <span data-field="value">8/12</span></div>
+                        <div class="outer">
+                            <div class="inner" style="width: 66.67%"></div>
+                        </div>
+                    </div>
+                    <div class="stat-bar" data-stat="stamina">
+                        <div data-field="counter">Stamina: <span data-field="value">26/150</span></div>
+                        <div class="outer">
+                            <div class="inner" style="width: 17.33%"></div>
+                        </div>
+                    </div>
+                    <div class="stat-bar" data-stat="energy">
+                        <div data-field="counter">Energy: <span data-field="value">31/32</span></div>
+                        <div class="outer">
+                            <div class="inner" style="width: 96.88%"></div>
+                        </div>
+                    </div>
+                    <div class="stat-bar" data-stat="food">
+                        <div data-field="counter">Food: <span data-field="value">10/50</span></div>
+                        <div class="outer">
+                            <div class="inner" style="width: 20.00%"></div>
+                        </div>
+                    </div>
+                    <div class="stat-bar" data-stat="special">
+                        <div data-field="counter">Special: <span data-field="value">3/7</span></div>
+                        <div class="outer">
+                            <div class="inner" style="width: 42.86%"></div>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </div>
+        <script>
+            window.onload = function() {
+                let buttons = document.querySelectorAll("button");
+                for (let button of buttons) {
+                    button.removeEventListener("click", null);
+                    button.addEventListener("click", function(e) {
+                        console.log(e);
+                        console.log("clicked");
+                        //button?.blur();
+                    });
+                }
+
+                let updateStatBars = function() {
+                    let statBars = document.querySelectorAll(".stat-bar");
+                    for (let statBar of statBars) {
+                        let valueCounter = statBar.querySelector("[data-field='value']");
+                        let values = valueCounter.textContent.split("/");
+                        let current = Number(values[0]);
+                        let max = Number(values[1]);
+                        let add = Number((Math.random() * (max - current) + 1).toFixed(0));
+                        let next = current + add;
+                        if (next > max)
+                            next = 0;
+                        let width = next / max * 100;
+                        valueCounter.textContent = `${next}/${max}`;
+                        statBar.querySelector(".inner").style.width = width.toFixed(2) + "%";
+                    }
+                };
+
+                setInterval(updateStatBars, 2000);
+            };
+        </script>
+    </body>
+</html>
