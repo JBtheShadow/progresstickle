@@ -137,6 +137,8 @@
                 background: var(--main-bg);
                 color: var(--text-dark);
                 padding: 0.5rem;
+                max-height: 100vh;
+                overflow: auto;
             }
 
             @media (max-width: 1399px) {
@@ -511,6 +513,13 @@
                             <div class="inner" style="width: 42.86%"></div>
                         </div>
                     </div>
+                    <h2>Testing canvas</h2>
+                    <p>At some point I wanna draw fuller animated images for each character/species that can be a lee. Likely will be complicated
+                        if each part ends up moving somewhat independently.</p>
+                    <p>I also want it to be possible for the game to recognize which areas are being tickled and respond accordingly</p>
+                    <p>Supposedly the canvas api has a way to detect if a point is inside of a path/shape</p>
+                    <p>With animated images, however, I might simplify the detection to "hitboxes" that don't necessarily match closely</p>
+                    <canvas id="testCanvas" width="200" height="200"></canvas>
                 </main>
             </div>
         </div>
@@ -544,6 +553,63 @@
                 };
 
                 setInterval(updateStatBars, 2000);
+
+                let testCanvas = document.querySelector("#testCanvas");
+                let ctx = testCanvas.getContext("2d");
+
+                let isMouseDown = false;
+                let inside = false;
+                let tickling = false;
+                document.addEventListener("mousedown", function(e) {
+                    isMouseDown = true;
+                });
+                document.addEventListener("mouseleave", function(e) {
+                    isMouseDown = false;
+                });
+                document.addEventListener("mouseup", function(e) {
+                    isMouseDown = false;
+                });
+
+                testCanvas.addEventListener("mousedown", function(e) {
+                    let x = e.clientX - testCanvas.offsetLeft;
+                    let y = e.clientY - testCanvas.offsetTop + document.querySelector("main").scrollTop;
+
+                    console.log(`down ${x},${y} ${e.button}`);
+                    tickling = true;
+                });
+                testCanvas.addEventListener("mouseup", function(e) {
+                    tickling = false;
+                });
+                testCanvas.addEventListener("mouseenter", function(e) {
+                    inside = true;
+                    if (isMouseDown)
+                        tickling = true;
+
+                    //console.log(`enter ${e.clientX},${e.clientY} ${e.button}`);
+                });
+                testCanvas.addEventListener("mouseleave", function(e) {
+                    inside = false;
+                    tickling = false;
+                    
+                    //console.log(`leave ${e.clientX},${e.clientY} ${e.button}`);
+                });
+
+                let img = new Image();
+                img.src = "../game/img/lil demon - idle.png";
+                let updateImage = function() {
+                    ctx.clearRect(0, 0, testCanvas.width, testCanvas.height);
+                    
+                    let widthOffset = (testCanvas.clientWidth - img.width) / 2;
+                    let heightOffset = (testCanvas.clientHeight - img.height) / 2;
+                    ctx.drawImage(img, widthOffset, heightOffset);
+
+                    ctx.font = "12px Arial";
+                    ctx.fillText(`Mouse down: ${isMouseDown}`, 10, 10);
+                    ctx.fillText(`Inside: ${inside}`, 10, 25);
+                    ctx.fillText(`Tickling: ${tickling}`, 10, 40);
+                }
+                img.onload = updateImage;
+                setInterval(updateImage, 50);
             };
         </script>
     </body>
